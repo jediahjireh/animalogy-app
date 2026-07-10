@@ -7,6 +7,8 @@ import '../../../core/providers/region_provider.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_dimensions.dart';
 import '../../../data/mascots/mascot_registry.dart';
+import '../../../shared/widgets/cartoon_card.dart';
+import '../../../shared/widgets/region_icon.dart';
 
 class RegionSelectionPage extends ConsumerWidget {
   const RegionSelectionPage({super.key});
@@ -14,6 +16,7 @@ class RegionSelectionPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
+      backgroundColor: AnimalColors.background,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(Dimensions.lg),
@@ -21,11 +24,30 @@ class RegionSelectionPage extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const SizedBox(height: Dimensions.xl),
-              Icon(Icons.public, size: 64, color: AnimalColors.primary),
+              Container(
+                width: Dimensions.iconXxl,
+                height: Dimensions.iconXxl,
+                decoration: BoxDecoration(
+                  color: AnimalColors.primary.withValues(alpha: 0.15),
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: AnimalColors.primary.withValues(alpha: 0.3),
+                    width: Dimensions.borderMd,
+                  ),
+                ),
+                child: const Icon(
+                  Icons.public,
+                  size: Dimensions.iconLg,
+                  color: AnimalColors.primary,
+                ),
+              ),
               const SizedBox(height: Dimensions.md),
               Text(
                 'Welcome to Animalogy',
-                style: Theme.of(context).textTheme.headlineLarge,
+                style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                  fontWeight: FontWeight.w800,
+                  color: AnimalColors.textPrimary,
+                ),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: Dimensions.sm),
@@ -38,17 +60,20 @@ class RegionSelectionPage extends ConsumerWidget {
               ),
               const SizedBox(height: Dimensions.xl),
               Expanded(
-                child: ListView.separated(
+                child: GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: Dimensions.md,
+                    mainAxisSpacing: Dimensions.md,
+                    childAspectRatio: 0.85,
+                  ),
                   itemCount: Region.values.length,
-                  separatorBuilder: (_, _) =>
-                      const SizedBox(height: Dimensions.md),
                   itemBuilder: (context, index) {
                     final region = Region.values[index];
                     final mascot = MascotRegistry.getByRegion(region.id);
-                    return _RegionTile(
+                    return _RegionGridCard(
                           region: region,
                           mascotName: mascot.name,
-                          mascotSpecies: mascot.species,
                           mascotIcon: mascot.icon,
                           onTap: () async {
                             await ref
@@ -62,10 +87,11 @@ class RegionSelectionPage extends ConsumerWidget {
                           delay: Duration(milliseconds: 100 * index),
                           duration: 400.ms,
                         )
-                        .slideX(
-                          begin: 0.1,
+                        .scale(
+                          begin: const Offset(0.9, 0.9),
                           delay: Duration(milliseconds: 100 * index),
                           duration: 400.ms,
+                          curve: Curves.easeOutBack,
                         );
                   },
                 ),
@@ -78,68 +104,73 @@ class RegionSelectionPage extends ConsumerWidget {
   }
 }
 
-class _RegionTile extends StatelessWidget {
+class _RegionGridCard extends StatelessWidget {
   final Region region;
   final String mascotName;
-  final String mascotSpecies;
   final IconData mascotIcon;
   final VoidCallback onTap;
 
-  const _RegionTile({
+  const _RegionGridCard({
     required this.region,
     required this.mascotName,
-    required this.mascotSpecies,
     required this.mascotIcon,
     required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(Dimensions.md),
-          child: Row(
+    return CartoonCard(
+      borderColor: region.color,
+      onTap: onTap,
+      rotate: true,
+      padding: const EdgeInsets.all(Dimensions.md),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          RegionIcon(
+            region: region,
+            size: Dimensions.iconLg,
+            showBackground: true,
+          ),
+          const SizedBox(height: Dimensions.sm),
+          Text(
+            region.name,
+            style: Theme.of(context).textTheme.titleSmall?.copyWith(
+              fontWeight: FontWeight.w800,
+              color: region.color,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: Dimensions.xs),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                width: Dimensions.mascotAvatarMd,
-                height: Dimensions.mascotAvatarMd,
-                decoration: BoxDecoration(
-                  color: region.color.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(Dimensions.radiusMd),
-                ),
-                child: Icon(mascotIcon, color: region.color, size: 32),
-              ),
-              const SizedBox(width: Dimensions.md),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '${region.emoji} ${region.name}',
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      'Guide: $mascotName the $mascotSpecies',
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      region.description,
-                      style: Theme.of(context).textTheme.bodySmall,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
+              Icon(mascotIcon, size: Dimensions.iconSm, color: region.color),
+              const SizedBox(width: Dimensions.xs),
+              Flexible(
+                child: Text(
+                  mascotName,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: AnimalColors.textSecondary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
-              Icon(Icons.chevron_right, color: AnimalColors.textTertiary),
             ],
           ),
-        ),
+          const SizedBox(height: Dimensions.sm),
+          Text(
+            region.description,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: AnimalColors.textTertiary,
+              fontSize: 11,
+            ),
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
       ),
     );
   }

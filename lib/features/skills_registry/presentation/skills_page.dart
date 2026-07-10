@@ -9,6 +9,7 @@ import '../../../data/story_packs/story_pack_registry.dart';
 import '../../../domain/models/app_mode.dart';
 import '../../../domain/models/reading_progress.dart';
 import '../../../domain/models/skill.dart';
+import '../../../shared/widgets/cartoon_card.dart';
 import '../../my_library/providers/library_providers.dart';
 
 class SkillsPage extends ConsumerWidget {
@@ -25,6 +26,7 @@ class SkillsPage extends ConsumerWidget {
     }).length;
 
     return Scaffold(
+      backgroundColor: AnimalColors.background,
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -32,6 +34,9 @@ class SkillsPage extends ConsumerWidget {
         ),
         title: Text(
           appMode == AppMode.child ? 'What I Learned' : 'Skills Registry',
+          style: Theme.of(
+            context,
+          ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
         ),
       ),
       body: SingleChildScrollView(
@@ -39,32 +44,65 @@ class SkillsPage extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              width: double.infinity,
+            CartoonCard(
+              borderColor: AnimalColors.primary,
               padding: const EdgeInsets.all(Dimensions.lg),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    AnimalColors.primary.withValues(alpha: 0.15),
-                    AnimalColors.accent.withValues(alpha: 0.1),
-                  ],
-                ),
-                borderRadius: BorderRadius.circular(Dimensions.radiusLg),
-              ),
-              child: Column(
+              child: Row(
                 children: [
-                  Text(
-                    '$completedCount / ${skills.length}',
-                    style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                      color: AnimalColors.primary,
-                      fontWeight: FontWeight.w800,
+                  Container(
+                    width: Dimensions.mascotAvatarMd,
+                    height: Dimensions.mascotAvatarMd,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          AnimalColors.primary.withValues(alpha: 0.2),
+                          AnimalColors.accent.withValues(alpha: 0.15),
+                        ],
+                      ),
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: AnimalColors.primary.withValues(alpha: 0.3),
+                        width: Dimensions.borderMd,
+                      ),
+                    ),
+                    child: Center(
+                      child: Text(
+                        '$completedCount',
+                        style: Theme.of(context).textTheme.headlineMedium
+                            ?.copyWith(
+                              color: AnimalColors.primary,
+                              fontWeight: FontWeight.w900,
+                            ),
+                      ),
                     ),
                   ),
-                  Text(
-                    appMode == AppMode.child
-                        ? 'Skills Unlocked'
-                        : 'Skills Completed',
-                    style: Theme.of(context).textTheme.bodyLarge,
+                  const SizedBox(width: Dimensions.md),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '$completedCount / ${skills.length}',
+                          style: Theme.of(context).textTheme.headlineSmall
+                              ?.copyWith(
+                                color: AnimalColors.primary,
+                                fontWeight: FontWeight.w800,
+                              ),
+                        ),
+                        Text(
+                          appMode == AppMode.child
+                              ? 'Skills Unlocked'
+                              : 'Skills Completed',
+                          style: Theme.of(context).textTheme.bodyLarge
+                              ?.copyWith(color: AnimalColors.textSecondary),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Icon(
+                    Icons.emoji_events,
+                    size: Dimensions.iconLg,
+                    color: AnimalColors.accent,
                   ),
                 ],
               ),
@@ -73,34 +111,46 @@ class SkillsPage extends ConsumerWidget {
             ...skills.map((skill) {
               final completionFraction = _skillCompletion(skill, progress);
               final isComplete = completionFraction >= 1.0;
+              final skillColor = isComplete
+                  ? AnimalColors.success
+                  : AnimalColors.primary;
 
-              return Card(
-                margin: const EdgeInsets.only(bottom: Dimensions.md),
-                child: Padding(
-                  padding: const EdgeInsets.all(Dimensions.md),
+              return Padding(
+                padding: const EdgeInsets.only(bottom: Dimensions.md),
+                child: CartoonCard(
+                  borderColor: skillColor.withValues(alpha: 0.5),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(
-                        width: 48,
-                        height: 48,
+                        width: Dimensions.iconXl,
+                        height: Dimensions.iconXl,
                         child: Stack(
                           alignment: Alignment.center,
                           children: [
-                            CircularProgressIndicator(
-                              value: completionFraction,
-                              strokeWidth: 4,
-                              backgroundColor: AnimalColors.border,
-                              color: isComplete
-                                  ? AnimalColors.success
-                                  : AnimalColors.primary,
+                            SizedBox(
+                              width: Dimensions.iconXl,
+                              height: Dimensions.iconXl,
+                              child: CircularProgressIndicator(
+                                value: completionFraction,
+                                strokeWidth: Dimensions.borderThick,
+                                strokeCap: StrokeCap.round,
+                                backgroundColor: AnimalColors.border,
+                                color: skillColor,
+                              ),
                             ),
-                            Icon(
-                              skill.icon,
-                              size: 22,
-                              color: isComplete
-                                  ? AnimalColors.success
-                                  : AnimalColors.primary,
+                            Container(
+                              width: 36,
+                              height: 36,
+                              decoration: BoxDecoration(
+                                color: skillColor.withValues(alpha: 0.15),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                skill.icon,
+                                size: Dimensions.iconSm,
+                                color: skillColor,
+                              ),
                             ),
                           ],
                         ),
@@ -112,54 +162,89 @@ class SkillsPage extends ConsumerWidget {
                           children: [
                             Text(
                               skill.name,
-                              style: Theme.of(context).textTheme.titleMedium,
+                              style: Theme.of(context).textTheme.titleSmall
+                                  ?.copyWith(fontWeight: FontWeight.w800),
                             ),
-                            const SizedBox(height: 4),
+                            const SizedBox(height: 2),
                             Text(
                               skill.description,
-                              style: Theme.of(context).textTheme.bodySmall,
+                              style: Theme.of(context).textTheme.bodySmall
+                                  ?.copyWith(color: AnimalColors.textSecondary),
                             ),
                             const SizedBox(height: Dimensions.sm),
                             ...skill.relatedPackIds.map((packId) {
                               final pack = StoryPackRegistry.getById(packId);
                               final done = progress[packId]?.completed == true;
                               return Padding(
-                                padding: const EdgeInsets.only(bottom: 4),
+                                padding: const EdgeInsets.only(
+                                  bottom: Dimensions.xs,
+                                ),
                                 child: GestureDetector(
                                   onTap: () => context.pushNamed(
                                     'story-pack-detail',
                                     pathParameters: {'packId': packId},
                                   ),
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        done
-                                            ? Icons.check_circle
-                                            : Icons.circle_outlined,
-                                        size: 16,
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: Dimensions.sm,
+                                      vertical: Dimensions.xs,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: done
+                                          ? AnimalColors.success.withValues(
+                                              alpha: 0.08,
+                                            )
+                                          : AnimalColors.surfaceVariant,
+                                      borderRadius: BorderRadius.circular(
+                                        Dimensions.radiusSm,
+                                      ),
+                                      border: Border.all(
                                         color: done
-                                            ? AnimalColors.success
-                                            : AnimalColors.textTertiary,
+                                            ? AnimalColors.success.withValues(
+                                                alpha: 0.3,
+                                              )
+                                            : AnimalColors.border,
+                                        width: Dimensions.borderThin,
                                       ),
-                                      const SizedBox(width: 6),
-                                      Expanded(
-                                        child: Text(
-                                          pack.title,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .labelMedium
-                                              ?.copyWith(
-                                                color: done
-                                                    ? AnimalColors.success
-                                                    : AnimalColors
-                                                          .textSecondary,
-                                                decoration: done
-                                                    ? TextDecoration.lineThrough
-                                                    : null,
-                                              ),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          done
+                                              ? Icons.check_circle
+                                              : Icons.circle_outlined,
+                                          size: 16,
+                                          color: done
+                                              ? AnimalColors.success
+                                              : AnimalColors.textTertiary,
                                         ),
-                                      ),
-                                    ],
+                                        const SizedBox(width: 6),
+                                        Expanded(
+                                          child: Text(
+                                            pack.title,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .labelMedium
+                                                ?.copyWith(
+                                                  color: done
+                                                      ? AnimalColors.success
+                                                      : AnimalColors
+                                                            .textSecondary,
+                                                  decoration: done
+                                                      ? TextDecoration
+                                                            .lineThrough
+                                                      : null,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                          ),
+                                        ),
+                                        Icon(
+                                          Icons.chevron_right,
+                                          size: 16,
+                                          color: AnimalColors.textTertiary,
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               );

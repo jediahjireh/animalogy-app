@@ -3,6 +3,8 @@ import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_dimensions.dart';
 import '../../../data/story_packs/story_pack_registry.dart';
+import '../../../shared/widgets/cartoon_button.dart';
+import '../../../shared/widgets/print_options_sheet.dart';
 
 class EducatorGuidePage extends StatelessWidget {
   final String packId;
@@ -21,6 +23,16 @@ class EducatorGuidePage extends StatelessWidget {
           onPressed: () => context.pop(),
         ),
         title: const Text('Educator Guide'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.print_rounded),
+            tooltip: 'Printable Resources',
+            onPressed: () {
+              final pack = StoryPackRegistry.getById(packId);
+              PrintOptionsSheet.show(context, pack);
+            },
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(Dimensions.lg),
@@ -272,6 +284,14 @@ class EducatorGuidePage extends StatelessWidget {
                   ),
                 ],
               ),
+            ),
+            const SizedBox(height: Dimensions.lg),
+            CartoonButton(
+              label: 'Print Resources',
+              icon: Icons.print_rounded,
+              onPressed: () => PrintOptionsSheet.show(context, pack),
+              color: AnimalColors.info,
+              expanded: true,
             ),
             const SizedBox(height: Dimensions.xxl),
           ],

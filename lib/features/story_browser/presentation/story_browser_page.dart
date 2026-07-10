@@ -6,6 +6,10 @@ import '../../../core/constants/regions.dart';
 import '../../../core/constants/safety_themes.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_dimensions.dart';
+import '../../../shared/widgets/badge_chip.dart';
+import '../../../shared/widgets/cartoon_card.dart';
+import '../../../shared/widgets/star_display.dart';
+import '../../my_library/providers/library_providers.dart';
 import '../providers/story_browser_providers.dart';
 
 class StoryBrowserPage extends ConsumerWidget {
@@ -17,10 +21,19 @@ class StoryBrowserPage extends ConsumerWidget {
     final regionFilter = ref.watch(regionFilterProvider);
     final themeFilter = ref.watch(themeFilterProvider);
     final ageFilter = ref.watch(ageFilterProvider);
+    final scores = ref.watch(storyScoresProvider);
+
+    final hasFilters =
+        regionFilter != null || themeFilter != null || ageFilter != null;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Browse Stories'),
+        title: Text(
+          'Browse Stories',
+          style: Theme.of(
+            context,
+          ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings_outlined),
@@ -35,31 +48,35 @@ class StoryBrowserPage extends ConsumerWidget {
             padding: const EdgeInsets.symmetric(horizontal: Dimensions.md),
             child: Row(
               children: [
-                _FilterChip(
+                BadgeChip(
                   label: regionFilter?.name ?? 'Region',
+                  icon: regionFilter?.icon ?? Icons.public,
+                  color: regionFilter?.color,
                   selected: regionFilter != null,
                   onTap: () => _showRegionFilter(context, ref),
                 ),
                 const SizedBox(width: Dimensions.sm),
-                _FilterChip(
+                BadgeChip(
                   label: themeFilter?.label ?? 'Theme',
+                  icon: themeFilter?.icon ?? Icons.shield_outlined,
+                  color: themeFilter?.color,
                   selected: themeFilter != null,
                   onTap: () => _showThemeFilter(context, ref),
                 ),
                 const SizedBox(width: Dimensions.sm),
-                _FilterChip(
+                BadgeChip(
                   label: ageFilter?.label ?? 'Age',
+                  icon: Icons.people_outline,
                   selected: ageFilter != null,
                   onTap: () => _showAgeFilter(context, ref),
                 ),
-                if (regionFilter != null ||
-                    themeFilter != null ||
-                    ageFilter != null) ...[
+                if (hasFilters) ...[
                   const SizedBox(width: Dimensions.sm),
-                  ActionChip(
-                    avatar: const Icon(Icons.clear, size: 16),
-                    label: const Text('Clear'),
-                    onPressed: () {
+                  BadgeChip(
+                    label: 'Clear',
+                    icon: Icons.clear_rounded,
+                    color: AnimalColors.error,
+                    onTap: () {
                       ref.read(regionFilterProvider.notifier).state = null;
                       ref.read(themeFilterProvider.notifier).state = null;
                       ref.read(ageFilterProvider.notifier).state = null;
@@ -69,7 +86,7 @@ class StoryBrowserPage extends ConsumerWidget {
               ],
             ),
           ),
-          const SizedBox(height: Dimensions.sm),
+          const SizedBox(height: Dimensions.md),
           Expanded(
             child: packs.isEmpty
                 ? Center(
@@ -77,7 +94,7 @@ class StoryBrowserPage extends ConsumerWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(
-                          Icons.search_off,
+                          Icons.search_off_rounded,
                           size: 64,
                           color: AnimalColors.textTertiary,
                         ),
@@ -90,126 +107,92 @@ class StoryBrowserPage extends ConsumerWidget {
                       ],
                     ),
                   )
-                : ListView.separated(
+                : GridView.builder(
                     padding: const EdgeInsets.all(Dimensions.md),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          childAspectRatio: 0.72,
+                          crossAxisSpacing: Dimensions.md,
+                          mainAxisSpacing: Dimensions.md,
+                        ),
                     itemCount: packs.length,
-                    separatorBuilder: (_, _) =>
-                        const SizedBox(height: Dimensions.sm),
                     itemBuilder: (context, index) {
                       final pack = packs[index];
-                      return Card(
-                        clipBehavior: Clip.antiAlias,
-                        child: InkWell(
-                          onTap: () => context.pushNamed(
-                            'story-pack-detail',
-                            pathParameters: {'packId': pack.id},
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              Container(
-                                height: 120,
-                                decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      pack.safetyTheme.color.withValues(
-                                        alpha: 0.3,
-                                      ),
-                                      pack.safetyTheme.color.withValues(
-                                        alpha: 0.1,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                child: Center(
-                                  child: Icon(
-                                    pack.safetyTheme.icon,
-                                    size: 48,
-                                    color: pack.safetyTheme.color,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(Dimensions.md),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      pack.title,
-                                      style: Theme.of(
-                                        context,
-                                      ).textTheme.titleMedium,
+                      final score = scores[pack.id];
+                      return CartoonCard(
+                        borderColor: pack.safetyTheme.color,
+                        rotate: true,
+                        onTap: () => context.pushNamed(
+                          'story-pack-detail',
+                          pathParameters: {'packId': pack.id},
+                        ),
+                        padding: const EdgeInsets.all(Dimensions.sm),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              height: 80,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [
+                                    pack.safetyTheme.color.withValues(
+                                      alpha: 0.3,
                                     ),
-                                    const SizedBox(height: 4),
-                                    Row(
-                                      children: [
-                                        Container(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 8,
-                                            vertical: 2,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: pack.safetyTheme.color
-                                                .withValues(alpha: 0.15),
-                                            borderRadius: BorderRadius.circular(
-                                              Dimensions.radiusRound,
-                                            ),
-                                          ),
-                                          child: Text(
-                                            pack.safetyTheme.label,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .labelSmall
-                                                ?.copyWith(
-                                                  color: pack.safetyTheme.color,
-                                                ),
-                                          ),
-                                        ),
-                                        const SizedBox(width: 8),
-                                        ...pack.ageGroups.map(
-                                          (age) => Padding(
-                                            padding: const EdgeInsets.only(
-                                              right: 4,
-                                            ),
-                                            child: Container(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                    horizontal: 6,
-                                                    vertical: 2,
-                                                  ),
-                                              decoration: BoxDecoration(
-                                                color:
-                                                    AnimalColors.surfaceVariant,
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                      Dimensions.radiusRound,
-                                                    ),
-                                              ),
-                                              child: Text(
-                                                age.label,
-                                                style: Theme.of(
-                                                  context,
-                                                ).textTheme.labelSmall,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Text(
-                                      pack.synopsis,
-                                      style: Theme.of(
-                                        context,
-                                      ).textTheme.bodySmall,
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
+                                    pack.safetyTheme.color.withValues(
+                                      alpha: 0.08,
                                     ),
                                   ],
                                 ),
+                                borderRadius: BorderRadius.circular(
+                                  Dimensions.radiusLg,
+                                ),
                               ),
-                            ],
-                          ),
+                              child: Center(
+                                child: Icon(
+                                  pack.safetyTheme.icon,
+                                  size: 40,
+                                  color: pack.safetyTheme.color,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: Dimensions.sm),
+                            Text(
+                              pack.title,
+                              style: Theme.of(context).textTheme.labelLarge
+                                  ?.copyWith(fontWeight: FontWeight.w700),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(height: Dimensions.xs),
+                            Row(
+                              children: [
+                                Icon(
+                                  pack.safetyTheme.icon,
+                                  size: 12,
+                                  color: pack.safetyTheme.color,
+                                ),
+                                const SizedBox(width: 4),
+                                Expanded(
+                                  child: Text(
+                                    pack.safetyTheme.label,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelSmall
+                                        ?.copyWith(
+                                          color: pack.safetyTheme.color,
+                                        ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const Spacer(),
+                            if (score != null)
+                              StarDisplay(stars: score.stars, size: 16),
+                          ],
                         ),
                       );
                     },
@@ -227,6 +210,7 @@ class StoryBrowserPage extends ConsumerWidget {
         shrinkWrap: true,
         children: [
           ListTile(
+            leading: const Icon(Icons.public),
             title: const Text('All Regions'),
             onTap: () {
               ref.read(regionFilterProvider.notifier).state = null;
@@ -236,7 +220,7 @@ class StoryBrowserPage extends ConsumerWidget {
           ...Region.values.map(
             (r) => ListTile(
               leading: Icon(r.icon, color: r.color),
-              title: Text('${r.emoji} ${r.name}'),
+              title: Text(r.name),
               onTap: () {
                 ref.read(regionFilterProvider.notifier).state = r;
                 Navigator.pop(context);
@@ -255,6 +239,7 @@ class StoryBrowserPage extends ConsumerWidget {
         shrinkWrap: true,
         children: [
           ListTile(
+            leading: const Icon(Icons.shield_outlined),
             title: const Text('All Themes'),
             onTap: () {
               ref.read(themeFilterProvider.notifier).state = null;
@@ -283,6 +268,7 @@ class StoryBrowserPage extends ConsumerWidget {
         shrinkWrap: true,
         children: [
           ListTile(
+            leading: const Icon(Icons.people_outline),
             title: const Text('All Ages'),
             onTap: () {
               ref.read(ageFilterProvider.notifier).state = null;
@@ -291,6 +277,7 @@ class StoryBrowserPage extends ConsumerWidget {
           ),
           ...AgeGroup.values.map(
             (a) => ListTile(
+              leading: const Icon(Icons.person_outline),
               title: Text('${a.displayName} (${a.label})'),
               onTap: () {
                 ref.read(ageFilterProvider.notifier).state = a;
@@ -299,59 +286,6 @@ class StoryBrowserPage extends ConsumerWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _FilterChip extends StatelessWidget {
-  final String label;
-  final bool selected;
-  final VoidCallback onTap;
-
-  const _FilterChip({
-    required this.label,
-    required this.selected,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: Dimensions.md,
-          vertical: Dimensions.sm,
-        ),
-        decoration: BoxDecoration(
-          color: selected ? AnimalColors.primaryLight : AnimalColors.surface,
-          borderRadius: BorderRadius.circular(Dimensions.radiusRound),
-          border: Border.all(
-            color: selected ? AnimalColors.primary : AnimalColors.border,
-          ),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              label,
-              style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                color: selected
-                    ? AnimalColors.primary
-                    : AnimalColors.textSecondary,
-              ),
-            ),
-            const SizedBox(width: 4),
-            Icon(
-              Icons.arrow_drop_down,
-              size: 18,
-              color: selected
-                  ? AnimalColors.primary
-                  : AnimalColors.textTertiary,
-            ),
-          ],
-        ),
       ),
     );
   }

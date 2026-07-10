@@ -8,6 +8,10 @@ import '../../../core/theme/app_dimensions.dart';
 import '../../../data/mascots/mascot_registry.dart';
 import '../../../data/story_packs/story_pack_registry.dart';
 import '../../../domain/models/app_mode.dart';
+import '../../../shared/widgets/badge_chip.dart';
+import '../../../shared/widgets/cartoon_button.dart';
+import '../../../shared/widgets/print_options_sheet.dart';
+import '../../../shared/widgets/star_display.dart';
 import '../../my_library/providers/library_providers.dart';
 
 class StoryPackDetailPage extends ConsumerWidget {
@@ -25,6 +29,10 @@ class StoryPackDetailPage extends ConsumerWidget {
     final isBookmarked = bookmarks.contains(packId);
     final progress = ref.watch(readingProgressProvider);
     final packProgress = progress[packId];
+    final scores = ref.watch(storyScoresProvider);
+    final score = scores[packId];
+
+    final regionColor = region?.color ?? AnimalColors.primary;
 
     return Scaffold(
       appBar: AppBar(
@@ -35,8 +43,10 @@ class StoryPackDetailPage extends ConsumerWidget {
         actions: [
           IconButton(
             icon: Icon(
-              isBookmarked ? Icons.bookmark : Icons.bookmark_border,
-              color: isBookmarked ? AnimalColors.primary : null,
+              isBookmarked
+                  ? Icons.favorite_rounded
+                  : Icons.favorite_border_rounded,
+              color: isBookmarked ? AnimalColors.error : null,
             ),
             onPressed: () =>
                 ref.read(bookmarksProvider.notifier).toggle(packId),
@@ -59,7 +69,11 @@ class StoryPackDetailPage extends ConsumerWidget {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                 ),
-                borderRadius: BorderRadius.circular(Dimensions.radiusLg),
+                borderRadius: BorderRadius.circular(Dimensions.radiusXl),
+                border: Border.all(
+                  color: pack.safetyTheme.color.withValues(alpha: 0.3),
+                  width: Dimensions.borderMd,
+                ),
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -79,137 +93,192 @@ class StoryPackDetailPage extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: Dimensions.lg),
-            Text(pack.title, style: Theme.of(context).textTheme.headlineMedium),
+            Text(
+              pack.title,
+              style: Theme.of(
+                context,
+              ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w800),
+            ),
             const SizedBox(height: Dimensions.sm),
             Row(
               children: [
-                Icon(mascot.icon, size: 20, color: AnimalColors.textSecondary),
-                const SizedBox(width: 6),
+                Container(
+                  width: 28,
+                  height: 28,
+                  decoration: BoxDecoration(
+                    color: regionColor.withValues(alpha: 0.15),
+                    shape: BoxShape.circle,
+                    border: Border.all(color: regionColor, width: 1.5),
+                  ),
+                  child: Icon(mascot.icon, size: 14, color: regionColor),
+                ),
+                const SizedBox(width: Dimensions.sm),
                 Text(
                   '${mascot.name} the ${mascot.species}',
-                  style: Theme.of(context).textTheme.bodyMedium,
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
                 ),
                 const Spacer(),
                 if (region != null)
-                  Text(
-                    '${region.emoji} ${region.name}',
-                    style: Theme.of(context).textTheme.bodySmall,
+                  BadgeChip(
+                    label: region.name,
+                    icon: region.icon,
+                    color: regionColor,
+                    selected: true,
                   ),
               ],
             ),
             const SizedBox(height: Dimensions.md),
             Wrap(
               spacing: 8,
-              runSpacing: 4,
+              runSpacing: 6,
               children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: pack.safetyTheme.color.withValues(alpha: 0.15),
-                    borderRadius: BorderRadius.circular(Dimensions.radiusRound),
-                  ),
-                  child: Text(
-                    pack.safetyTheme.label,
-                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: pack.safetyTheme.color,
-                    ),
-                  ),
+                BadgeChip(
+                  label: pack.safetyTheme.label,
+                  icon: pack.safetyTheme.icon,
+                  color: pack.safetyTheme.color,
+                  selected: true,
                 ),
                 ...pack.ageGroups.map(
-                  (age) => Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AnimalColors.surfaceVariant,
-                      borderRadius: BorderRadius.circular(
-                        Dimensions.radiusRound,
-                      ),
-                    ),
-                    child: Text(
-                      'Ages ${age.label}',
-                      style: Theme.of(context).textTheme.labelSmall,
-                    ),
+                  (age) => BadgeChip(
+                    label: 'Ages ${age.label}',
+                    icon: Icons.people_outline,
                   ),
                 ),
               ],
             ),
+            if (score != null) ...[
+              const SizedBox(height: Dimensions.md),
+              Row(
+                children: [
+                  StarDisplay(stars: score.stars, size: 28),
+                  const SizedBox(width: Dimensions.sm),
+                  Text(
+                    '${score.correctAnswers}/${score.totalQuestions} correct',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: AnimalColors.textTertiary,
+                    ),
+                  ),
+                ],
+              ),
+            ],
             const SizedBox(height: Dimensions.lg),
-            Text(pack.synopsis, style: Theme.of(context).textTheme.bodyLarge),
+            Text(
+              pack.synopsis,
+              style: Theme.of(
+                context,
+              ).textTheme.bodyLarge?.copyWith(height: 1.5),
+            ),
             const SizedBox(height: Dimensions.lg),
             if (packProgress != null && !packProgress.completed)
-              Text(
-                'You\'re on page ${packProgress.lastPageRead + 1} of ${pack.pages.length}',
-                style: Theme.of(
-                  context,
-                ).textTheme.bodySmall?.copyWith(color: AnimalColors.primary),
-              ),
-            if (packProgress != null && packProgress.completed)
-              Container(
-                padding: const EdgeInsets.all(Dimensions.md),
-                decoration: BoxDecoration(
-                  color: AnimalColors.success.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(Dimensions.radiusMd),
-                  border: Border.all(
-                    color: AnimalColors.success.withValues(alpha: 0.3),
+              Padding(
+                padding: const EdgeInsets.only(bottom: Dimensions.md),
+                child: Container(
+                  padding: const EdgeInsets.all(Dimensions.md),
+                  decoration: BoxDecoration(
+                    color: AnimalColors.primaryLight,
+                    borderRadius: BorderRadius.circular(Dimensions.radiusXl),
+                    border: Border.all(
+                      color: AnimalColors.primary.withValues(alpha: 0.3),
+                      width: Dimensions.borderThin,
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.auto_stories_rounded,
+                        color: AnimalColors.primary,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Page ${packProgress.lastPageRead + 1} of ${pack.pages.length}',
+                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                          color: AnimalColors.primary,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.check_circle,
-                      color: AnimalColors.success,
-                      size: 20,
+              ),
+            if (packProgress != null && packProgress.completed)
+              Padding(
+                padding: const EdgeInsets.only(bottom: Dimensions.md),
+                child: Container(
+                  padding: const EdgeInsets.all(Dimensions.md),
+                  decoration: BoxDecoration(
+                    color: AnimalColors.success.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(Dimensions.radiusXl),
+                    border: Border.all(
+                      color: AnimalColors.success.withValues(alpha: 0.3),
+                      width: Dimensions.borderThin,
                     ),
-                    const SizedBox(width: 8),
-                    Text(
-                      'Completed',
-                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.check_circle_rounded,
                         color: AnimalColors.success,
+                        size: 20,
                       ),
-                    ),
-                  ],
+                      const SizedBox(width: 8),
+                      Text(
+                        'Completed',
+                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                          color: AnimalColors.success,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            const SizedBox(height: Dimensions.lg),
-            ElevatedButton.icon(
+            CartoonButton(
+              label: packProgress != null && !packProgress.completed
+                  ? 'Continue Reading'
+                  : packProgress?.completed == true
+                  ? 'Read Again'
+                  : 'Start Reading',
+              icon: packProgress != null && !packProgress.completed
+                  ? Icons.play_arrow_rounded
+                  : Icons.auto_stories_rounded,
               onPressed: () => context.pushNamed(
                 'story-viewer',
                 pathParameters: {'packId': packId},
               ),
-              icon: Icon(
-                packProgress != null && !packProgress.completed
-                    ? Icons.play_arrow
-                    : Icons.auto_stories,
-              ),
-              label: Text(
-                packProgress != null && !packProgress.completed
-                    ? 'Continue Reading'
-                    : packProgress?.completed == true
-                    ? 'Read Again'
-                    : 'Start Reading',
-              ),
+              expanded: true,
             ),
             if (appMode == AppMode.educator) ...[
               const SizedBox(height: Dimensions.md),
-              OutlinedButton.icon(
+              CartoonButton(
+                label: 'Educator Guide',
+                icon: Icons.school_rounded,
                 onPressed: () => context.pushNamed(
                   'educator-guide',
                   pathParameters: {'packId': packId},
                 ),
-                icon: const Icon(Icons.school),
-                label: const Text('Educator Guide'),
+                color: AnimalColors.secondary,
+                expanded: true,
               ),
             ],
-            const SizedBox(height: Dimensions.lg),
             if (appMode == AppMode.educator) ...[
+              const SizedBox(height: Dimensions.md),
+              CartoonButton(
+                label: 'Printable Resources',
+                icon: Icons.print_rounded,
+                onPressed: () => PrintOptionsSheet.show(context, pack),
+                color: AnimalColors.info,
+                expanded: true,
+              ),
+            ],
+            if (appMode == AppMode.educator) ...[
+              const SizedBox(height: Dimensions.xl),
               Text(
                 'Learning Objectives',
-                style: Theme.of(context).textTheme.titleMedium,
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
               ),
               const SizedBox(height: Dimensions.sm),
               ...pack.educatorGuide.learningObjectives.map(
@@ -218,8 +287,8 @@ class StoryPackDetailPage extends ConsumerWidget {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(
-                        Icons.check_circle_outline,
+                      const Icon(
+                        Icons.check_circle_outline_rounded,
                         size: 18,
                         color: AnimalColors.secondary,
                       ),
