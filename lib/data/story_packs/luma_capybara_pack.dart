@@ -6,6 +6,7 @@ import '../../domain/models/story_page.dart';
 import '../../domain/models/educator_guide.dart';
 import '../../domain/models/discussion_prompt.dart';
 import '../../domain/models/activity.dart';
+import '../../domain/models/comprehension_question.dart';
 
 final List<StoryPack> lumaCapybaraPacks = [
   StoryPack(
@@ -263,5 +264,54 @@ final List<StoryPack> lumaCapybaraPacks = [
           'the moment something feels wrong. You do not need to be sure to ask for '
           'help.',
     ),
+    questions: [
+      ComprehensionQuestion(
+        id: 'luma_q1',
+        questionText: 'How did the anaconda trick the capybaras?',
+        options: [
+          'By pretending to be a friendly animal',
+          'By lying very still and looking like a fallen log',
+          'By offering them food',
+          'By making loud scary noises',
+        ],
+        correctIndex: 1,
+        explanation:
+            'The anaconda stayed perfectly still by the riverbank, '
+            'pretending to be a harmless log until the capybaras stopped '
+            'noticing it was there.',
+        mascotEncouragement: 'Great job! You noticed what others missed!',
+      ),
+      ComprehensionQuestion(
+        id: 'luma_q2',
+        questionText: 'What kind of danger is hardest to spot?',
+        options: [
+          'Danger that is loud and obvious',
+          'Danger that is quiet and patient',
+          'Danger that runs away from you',
+          'Danger that only happens at night',
+        ],
+        correctIndex: 1,
+        explanation:
+            'The most difficult dangers to spot are the ones that stay '
+            'quiet and patient, waiting until you stop paying attention.',
+        mascotEncouragement: 'You are learning to look more carefully!',
+      ),
+      ComprehensionQuestion(
+        id: 'luma_q3',
+        questionText:
+            'What should you do if something feels wrong, even if you are not sure?',
+        options: [
+          'Wait until you are completely sure',
+          'Ignore the feeling',
+          'Speak up and ask for help',
+          'Keep it a secret',
+        ],
+        correctIndex: 2,
+        explanation:
+            'You do not need to be completely sure that something is wrong '
+            'to ask for help. Speaking up early can keep you safe.',
+        mascotEncouragement: 'Always trust your feelings and speak up!',
+      ),
+    ],
   ),
 ];

@@ -5,10 +5,24 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../../../core/providers/app_mode_provider.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_dimensions.dart';
+import '../../../data/mascots/mascot_registry.dart';
 import '../../../data/story_packs/story_pack_registry.dart';
 import '../../../domain/models/app_mode.dart';
+import '../../../domain/models/story_pack.dart';
 import '../../../domain/models/story_page.dart';
+import '../../../domain/models/story_score.dart';
+import '../../../shared/widgets/cartoon_button.dart';
 import '../../my_library/providers/library_providers.dart';
+import 'question_page_view.dart';
+import 'story_complete_overlay.dart';
+
+enum _PageType { story, question }
+
+class _InterleavedPage {
+  final _PageType type;
+  final int index;
+  const _InterleavedPage(this.type, this.index);
+}
 
 class StoryViewerPage extends ConsumerStatefulWidget {
   final String packId;
@@ -21,15 +35,70 @@ class StoryViewerPage extends ConsumerStatefulWidget {
 
 class _StoryViewerPageState extends ConsumerState<StoryViewerPage> {
   late PageController _pageController;
+  late StoryPack _pack;
+  late List<_InterleavedPage> _pages;
+  late String _mascotName;
+
   int _currentPage = 0;
+  bool _showCompletion = false;
+  int _correctAnswers = 0;
+  int _resetCount = 0;
+  final Set<int> _answeredQuestions = {};
 
   @override
   void initState() {
     super.initState();
+    _pack = StoryPackRegistry.getById(widget.packId);
+    _mascotName = MascotRegistry.getById(_pack.mascotId).name;
+    _pages = _buildInterleavedPages();
+
     final progress = ref.read(readingProgressProvider);
     final startPage = progress[widget.packId]?.lastPageRead ?? 0;
-    _currentPage = startPage;
-    _pageController = PageController(initialPage: startPage);
+    final mappedStart = _mapStoryPageToInterleaved(startPage);
+    _currentPage = mappedStart;
+    _pageController = PageController(initialPage: mappedStart);
+  }
+
+  List<_InterleavedPage> _buildInterleavedPages() {
+    final pages = <_InterleavedPage>[];
+    final questions = _pack.questions;
+    final storyCount = _pack.pages.length;
+
+    if (questions.isEmpty) {
+      for (var i = 0; i < storyCount; i++) {
+        pages.add(_InterleavedPage(_PageType.story, i));
+      }
+      return pages;
+    }
+
+    final interval = storyCount ~/ (questions.length + 1);
+    var questionIdx = 0;
+
+    for (var i = 0; i < storyCount; i++) {
+      pages.add(_InterleavedPage(_PageType.story, i));
+      if (questionIdx < questions.length &&
+          (i + 1) % interval == 0 &&
+          i < storyCount - 1) {
+        pages.add(_InterleavedPage(_PageType.question, questionIdx));
+        questionIdx++;
+      }
+    }
+
+    while (questionIdx < questions.length) {
+      pages.add(_InterleavedPage(_PageType.question, questionIdx));
+      questionIdx++;
+    }
+
+    return pages;
+  }
+
+  int _mapStoryPageToInterleaved(int storyPage) {
+    for (var i = 0; i < _pages.length; i++) {
+      if (_pages[i].type == _PageType.story && _pages[i].index >= storyPage) {
+        return i;
+      }
+    }
+    return 0;
   }
 
   @override
@@ -38,28 +107,118 @@ class _StoryViewerPageState extends ConsumerState<StoryViewerPage> {
     super.dispose();
   }
 
+  bool get _canAdvance {
+    final current = _pages[_currentPage];
+    if (current.type == _PageType.question) {
+      return _answeredQuestions.contains(current.index);
+    }
+    return true;
+  }
+
+  void _goNext() {
+    if (_currentPage < _pages.length - 1) {
+      _pageController.nextPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    } else {
+      _finishStory();
+    }
+  }
+
+  void _finishStory() {
+    ref.read(readingProgressProvider.notifier).markCompleted(widget.packId);
+
+    final total = _pack.questions.length;
+    final stars = StoryScore.calculateStars(_correctAnswers, total);
+    if (total > 0) {
+      final score = StoryScore(
+        packId: widget.packId,
+        correctAnswers: _correctAnswers,
+        totalQuestions: total,
+        stars: stars,
+        completedAt: DateTime.now(),
+      );
+      ref.read(storyScoresProvider.notifier).saveScore(score);
+    }
+
+    setState(() => _showCompletion = true);
+  }
+
   @override
   Widget build(BuildContext context) {
-    final pack = StoryPackRegistry.getById(widget.packId);
     final appMode = ref.watch(appModeProvider);
-    final totalPages = pack.pages.length;
+
+    if (_showCompletion) {
+      return Scaffold(
+        body: StoryCompleteOverlay(
+          mascotName: _mascotName,
+          stars: StoryScore.calculateStars(
+            _correctAnswers,
+            _pack.questions.length,
+          ),
+          correctAnswers: _correctAnswers,
+          totalQuestions: _pack.questions.length,
+          onReadAgain: () {
+            _pageController.dispose();
+            _pageController = PageController(initialPage: 0);
+            setState(() {
+              _showCompletion = false;
+              _currentPage = 0;
+              _correctAnswers = 0;
+              _resetCount++;
+              _answeredQuestions.clear();
+            });
+          },
+          onDone: () => context.pop(),
+        ),
+      );
+    }
+
+    final currentInterleavedPage = _pages[_currentPage];
+    final isQuestionPage = currentInterleavedPage.type == _PageType.question;
 
     return Scaffold(
-      backgroundColor: pack.pages[_currentPage].sceneColor,
+      backgroundColor: isQuestionPage
+          ? AnimalColors.background
+          : _pack.pages[currentInterleavedPage.index].sceneColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         leading: IconButton(
           icon: const Icon(Icons.close),
           onPressed: () => context.pop(),
         ),
-        title: Text(pack.title, style: Theme.of(context).textTheme.titleMedium),
+        title: Text(
+          _pack.title,
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
+        ),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: Dimensions.md),
             child: Center(
-              child: Text(
-                '${_currentPage + 1} / $totalPages',
-                style: Theme.of(context).textTheme.labelLarge,
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: Dimensions.md,
+                  vertical: Dimensions.xs,
+                ),
+                decoration: BoxDecoration(
+                  color: AnimalColors.primaryLight,
+                  borderRadius: BorderRadius.circular(Dimensions.radiusRound),
+                  border: Border.all(
+                    color: AnimalColors.primary.withValues(alpha: 0.3),
+                  ),
+                ),
+                child: Text(
+                  isQuestionPage
+                      ? 'Quiz'
+                      : '${currentInterleavedPage.index + 1} / ${_pack.pages.length}',
+                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                    color: AnimalColors.primary,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
               ),
             ),
           ),
@@ -70,17 +229,35 @@ class _StoryViewerPageState extends ConsumerState<StoryViewerPage> {
           Expanded(
             child: PageView.builder(
               controller: _pageController,
-              itemCount: totalPages,
+              physics: _canAdvance
+                  ? const ClampingScrollPhysics()
+                  : const NeverScrollableScrollPhysics(),
+              itemCount: _pages.length,
               onPageChanged: (index) {
                 setState(() => _currentPage = index);
-                ref
-                    .read(readingProgressProvider.notifier)
-                    .updatePage(widget.packId, index);
+                final page = _pages[index];
+                if (page.type == _PageType.story) {
+                  ref
+                      .read(readingProgressProvider.notifier)
+                      .updatePage(widget.packId, page.index);
+                }
               },
               itemBuilder: (context, index) {
-                final page = pack.pages[index];
+                final page = _pages[index];
+                if (page.type == _PageType.question) {
+                  return QuestionPageView(
+                    key: ValueKey('q_${page.index}_$_resetCount'),
+                    question: _pack.questions[page.index],
+                    mascotName: _mascotName,
+                    onAnswered: _goNext,
+                    onResult: (correct) {
+                      _answeredQuestions.add(page.index);
+                      if (correct) _correctAnswers++;
+                    },
+                  );
+                }
                 return _StoryPageView(
-                  page: page,
+                  page: _pack.pages[page.index],
                   isChildMode: appMode == AppMode.child,
                 );
               },
@@ -93,90 +270,51 @@ class _StoryViewerPageState extends ConsumerState<StoryViewerPage> {
                 children: [
                   SmoothPageIndicator(
                     controller: _pageController,
-                    count: totalPages,
+                    count: _pages.length,
                     effect: WormEffect(
                       dotHeight: 8,
                       dotWidth: 8,
-                      spacing: 6,
+                      spacing: 4,
                       dotColor: AnimalColors.border,
-                      activeDotColor: AnimalColors.primary,
+                      activeDotColor: isQuestionPage
+                          ? AnimalColors.accent
+                          : AnimalColors.primary,
                     ),
                   ),
                   const SizedBox(height: Dimensions.md),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      _currentPage > 0
-                          ? TextButton.icon(
-                              onPressed: () {
-                                _pageController.previousPage(
-                                  duration: const Duration(milliseconds: 300),
-                                  curve: Curves.easeInOut,
-                                );
-                              },
-                              icon: const Icon(Icons.arrow_back),
-                              label: const Text('Back'),
-                            )
-                          : const SizedBox(width: 100),
-                      _currentPage < totalPages - 1
-                          ? ElevatedButton.icon(
-                              onPressed: () {
-                                _pageController.nextPage(
-                                  duration: const Duration(milliseconds: 300),
-                                  curve: Curves.easeInOut,
-                                );
-                              },
-                              icon: const Icon(Icons.arrow_forward),
-                              label: const Text('Next'),
-                            )
-                          : ElevatedButton.icon(
-                              onPressed: () {
-                                ref
-                                    .read(readingProgressProvider.notifier)
-                                    .markCompleted(widget.packId);
-                                _showCompletionDialog(context);
-                              },
-                              icon: const Icon(Icons.celebration),
-                              label: const Text('Finish'),
-                            ),
-                    ],
-                  ),
+                  if (!isQuestionPage)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        _currentPage > 0
+                            ? TextButton.icon(
+                                onPressed: () {
+                                  _pageController.previousPage(
+                                    duration: const Duration(milliseconds: 300),
+                                    curve: Curves.easeInOut,
+                                  );
+                                },
+                                icon: const Icon(Icons.arrow_back_rounded),
+                                label: const Text('Back'),
+                              )
+                            : const SizedBox(width: 100),
+                        _currentPage < _pages.length - 1
+                            ? CartoonButton(
+                                label: 'Next',
+                                icon: Icons.arrow_forward_rounded,
+                                onPressed: _goNext,
+                              )
+                            : CartoonButton(
+                                label: 'Finish',
+                                icon: Icons.auto_awesome,
+                                color: AnimalColors.accent,
+                                onPressed: _finishStory,
+                              ),
+                      ],
+                    ),
                 ],
               ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showCompletionDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(Dimensions.radiusLg),
-        ),
-        title: const Text('Great Job!'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.star, size: 64, color: AnimalColors.accent),
-            const SizedBox(height: Dimensions.md),
-            Text(
-              'You finished the story! Remember what you learned today.',
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyLarge,
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(ctx).pop();
-              context.pop();
-            },
-            child: const Text('Done'),
           ),
         ],
       ),
@@ -201,9 +339,10 @@ class _StoryPageView extends StatelessWidget {
             height: 220,
             decoration: BoxDecoration(
               color: page.sceneColor,
-              borderRadius: BorderRadius.circular(Dimensions.radiusLg),
+              borderRadius: BorderRadius.circular(Dimensions.radiusXl),
               border: Border.all(
-                color: AnimalColors.border.withValues(alpha: 0.5),
+                color: AnimalColors.borderBold.withValues(alpha: 0.3),
+                width: Dimensions.borderMd,
               ),
             ),
             child: Center(
@@ -242,33 +381,40 @@ class _StoryPageView extends StatelessWidget {
                   ).textTheme.bodyLarge?.copyWith(fontSize: 22, height: 1.7)
                 : Theme.of(context).textTheme.bodyLarge?.copyWith(height: 1.6),
           ),
-          const SizedBox(height: Dimensions.lg),
-          Container(
-            padding: const EdgeInsets.all(Dimensions.md),
-            decoration: BoxDecoration(
-              color: AnimalColors.secondaryLight,
-              borderRadius: BorderRadius.circular(Dimensions.radiusMd),
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Icon(
-                  Icons.lightbulb_outline,
-                  size: 20,
-                  color: AnimalColors.secondary,
+          if (!isChildMode) ...[
+            const SizedBox(height: Dimensions.lg),
+            Container(
+              padding: const EdgeInsets.all(Dimensions.md),
+              decoration: BoxDecoration(
+                color: AnimalColors.secondaryLight,
+                borderRadius: BorderRadius.circular(Dimensions.radiusXl),
+                border: Border.all(
+                  color: AnimalColors.secondary.withValues(alpha: 0.3),
+                  width: Dimensions.borderThin,
                 ),
-                const SizedBox(width: Dimensions.sm),
-                Expanded(
-                  child: Text(
-                    page.learningCue,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: AnimalColors.secondary,
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Icon(
+                    Icons.lightbulb_rounded,
+                    size: 22,
+                    color: AnimalColors.secondary,
+                  ),
+                  const SizedBox(width: Dimensions.sm),
+                  Expanded(
+                    child: Text(
+                      page.learningCue,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: AnimalColors.secondary,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
+          ],
         ],
       ),
     );

@@ -6,6 +6,7 @@ import '../../domain/models/story_page.dart';
 import '../../domain/models/educator_guide.dart';
 import '../../domain/models/discussion_prompt.dart';
 import '../../domain/models/activity.dart';
+import '../../domain/models/comprehension_question.dart';
 
 final List<StoryPack> kaiaMeerkatPacks = [
   StoryPack(
@@ -273,5 +274,54 @@ final List<StoryPack> kaiaMeerkatPacks = [
           'adult before believing something that feels urgent or too good '
           'to be true.',
     ),
+    questions: [
+      ComprehensionQuestion(
+        id: 'kaia_q1',
+        questionText: 'Why did the drongo bird make fake danger calls?',
+        options: [
+          'To warn the meerkats about real danger',
+          'To steal food while the meerkats ran away',
+          'To make friends with the meerkats',
+          'To practise its singing voice',
+        ],
+        correctIndex: 1,
+        explanation:
+            'The drongo bird used fake danger calls as a trick to make '
+            'the meerkats leave their food behind so it could steal it.',
+        mascotEncouragement: 'Great thinking! You spotted the trick!',
+      ),
+      ComprehensionQuestion(
+        id: 'kaia_q2',
+        questionText:
+            'What should you do if someone online sends you an urgent '
+            'message that seems scary?',
+        options: [
+          'Do whatever they say immediately',
+          'Share it with all your friends',
+          'Stop, check the facts, and ask a trusted adult',
+          'Ignore all messages forever',
+        ],
+        correctIndex: 2,
+        explanation:
+            'When something feels urgent or scary, the best thing to do '
+            'is pause, check if it is real, and ask a trusted adult for help.',
+        mascotEncouragement: 'You are learning to stay safe, just like Kaia!',
+      ),
+      ComprehensionQuestion(
+        id: 'kaia_q3',
+        questionText: 'What did Kaia learn by the end of the story?',
+        options: [
+          'All birds are dangerous',
+          'Never eat food outside',
+          'Not everyone who sounds helpful is telling the truth',
+          'Meerkats should live alone',
+        ],
+        correctIndex: 2,
+        explanation:
+            'Kaia learned that just because someone sounds helpful or '
+            'friendly, it does not mean they are being honest.',
+        mascotEncouragement: 'Well done! That is an important safety lesson!',
+      ),
+    ],
   ),
 ];

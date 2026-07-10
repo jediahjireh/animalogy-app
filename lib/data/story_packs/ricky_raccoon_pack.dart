@@ -6,6 +6,7 @@ import '../../domain/models/story_page.dart';
 import '../../domain/models/educator_guide.dart';
 import '../../domain/models/discussion_prompt.dart';
 import '../../domain/models/activity.dart';
+import '../../domain/models/comprehension_question.dart';
 
 final List<StoryPack> rickyRaccoonPacks = [
   StoryPack(
@@ -240,5 +241,54 @@ final List<StoryPack> rickyRaccoonPacks = [
           'If something feels wrong, it is okay to ask questions, check with '
           'others, and tell a safe adult about your concerns.',
     ),
+    questions: [
+      ComprehensionQuestion(
+        id: 'ricky_q1',
+        questionText: 'Why did the other animals trust the owl at first?',
+        options: [
+          'Because the owl was very funny',
+          'Because the owl was wise and warned them of danger',
+          'Because the owl gave them food',
+          'Because the owl was the smallest animal',
+        ],
+        correctIndex: 1,
+        explanation:
+            'The animals trusted the owl because it seemed wise and '
+            'helpful, always warning them about danger in the forest.',
+        mascotEncouragement: 'Good thinking! Trust should be based on actions!',
+      ),
+      ComprehensionQuestion(
+        id: 'ricky_q2',
+        questionText:
+            'What was the owl really doing with the false danger alerts?',
+        options: [
+          'Protecting the smaller animals',
+          'Practising its warning calls',
+          'Scaring animals away to steal their food',
+          'Playing a harmless game',
+        ],
+        correctIndex: 2,
+        explanation:
+            'The owl used false danger alerts to scare smaller animals '
+            'away from their food so it could take the food for itself.',
+        mascotEncouragement: 'You uncovered the truth, just like Ricky!',
+      ),
+      ComprehensionQuestion(
+        id: 'ricky_q3',
+        questionText: 'What does it mean that trust must be earned?',
+        options: [
+          'You should trust everyone right away',
+          'Trust comes from someone showing honest actions over time',
+          'Only trust people who are older than you',
+          'You should never trust anyone',
+        ],
+        correctIndex: 1,
+        explanation:
+            'Trust is earned when someone shows through their actions, '
+            'again and again, that they are honest and care about you.',
+        mascotEncouragement:
+            'Exactly right! Watch what people do, not just what they say!',
+      ),
+    ],
   ),
 ];

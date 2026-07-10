@@ -6,6 +6,7 @@ import '../../domain/models/story_page.dart';
 import '../../domain/models/educator_guide.dart';
 import '../../domain/models/discussion_prompt.dart';
 import '../../domain/models/activity.dart';
+import '../../domain/models/comprehension_question.dart';
 
 final List<StoryPack> taraTurtlePacks = [
   StoryPack(
@@ -277,5 +278,56 @@ final List<StoryPack> taraTurtlePacks = [
           'do, not just what they say, and talk to a trusted adult if '
           "someone's kindness feels like it comes with strings attached.",
     ),
+    questions: [
+      ComprehensionQuestion(
+        id: 'tara_q1',
+        questionText: 'How did the crocodile try to lure Tara closer?',
+        options: [
+          'By chasing her through the jungle',
+          'By using flattery and offers of help',
+          'By giving her real gifts',
+          'By singing a pretty song',
+        ],
+        correctIndex: 1,
+        explanation:
+            'The crocodile used sweet words and compliments to make Tara '
+            'feel special, hoping she would trust it and come closer.',
+        mascotEncouragement: 'Well spotted! You can see through flattery!',
+      ),
+      ComprehensionQuestion(
+        id: 'tara_q2',
+        questionText:
+            'How can you tell if someone is using flattery to manipulate you?',
+        options: [
+          'They give you lots of compliments for no reason',
+          'They are always honest with you',
+          'They never talk to you',
+          'They ask your parents first',
+        ],
+        correctIndex: 0,
+        explanation:
+            'When someone gives you lots of compliments or praise to get '
+            'you to do something, they might be using flattery as a trick.',
+        mascotEncouragement:
+            'Excellent! Look at what people do, not just what they say!',
+      ),
+      ComprehensionQuestion(
+        id: 'tara_q3',
+        questionText:
+            'What is the safest thing to do if a stranger is overly kind?',
+        options: [
+          'Go with them because they are nice',
+          'Give them what they want',
+          'Talk to a trusted adult about it',
+          'Pretend you did not hear them',
+        ],
+        correctIndex: 2,
+        explanation:
+            'If someone you do not know well is being unusually kind or '
+            'offering things, the safest choice is to talk to a trusted adult.',
+        mascotEncouragement:
+            'That is exactly right! Trusted adults can help you stay safe!',
+      ),
+    ],
   ),
 ];

@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/providers/persistence_providers.dart';
 import '../../../domain/models/reading_progress.dart';
+import '../../../domain/models/story_score.dart';
 
 final bookmarksProvider =
     StateNotifierProvider<BookmarksNotifier, List<String>>((ref) {
@@ -61,4 +62,26 @@ class ReadingProgressNotifier
     state = {...state, packId: updated};
     await _ref.read(preferencesServiceProvider).setReadingProgress(state);
   }
+}
+
+final storyScoresProvider =
+    StateNotifierProvider<StoryScoresNotifier, Map<String, StoryScore>>((ref) {
+      final prefs = ref.read(preferencesServiceProvider);
+      return StoryScoresNotifier(prefs.getStoryScores(), ref);
+    });
+
+class StoryScoresNotifier extends StateNotifier<Map<String, StoryScore>> {
+  final Ref _ref;
+
+  StoryScoresNotifier(super.initialScores, this._ref);
+
+  Future<void> saveScore(StoryScore score) async {
+    final existing = state[score.packId];
+    if (existing == null || score.stars > existing.stars) {
+      state = {...state, score.packId: score};
+      await _ref.read(preferencesServiceProvider).setStoryScores(state);
+    }
+  }
+
+  StoryScore? getScore(String packId) => state[packId];
 }

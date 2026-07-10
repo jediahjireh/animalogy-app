@@ -6,6 +6,7 @@ import '../../domain/models/story_page.dart';
 import '../../domain/models/educator_guide.dart';
 import '../../domain/models/discussion_prompt.dart';
 import '../../domain/models/activity.dart';
+import '../../domain/models/comprehension_question.dart';
 
 final List<StoryPack> daisyDingoPacks = [
   StoryPack(
@@ -257,5 +258,53 @@ final List<StoryPack> daisyDingoPacks = [
           'moment to stop, look around, and check for yourself before you '
           'react. A loud voice does not always mean the truth is being told.',
     ),
+    questions: [
+      ComprehensionQuestion(
+        id: 'daisy_q1',
+        questionText: 'How did the kookaburra trick the dingo pack?',
+        options: [
+          'By hiding their food in a tree',
+          'By using its loud laugh to scare them away from food',
+          'By pretending to be a friendly bird',
+          'By singing a beautiful song',
+        ],
+        correctIndex: 1,
+        explanation:
+            'The kookaburra used its loud laughter-like call to create '
+            'false alarms, making the dingoes abandon their food.',
+        mascotEncouragement: 'Sharp ears, mate! You caught the trick!',
+      ),
+      ComprehensionQuestion(
+        id: 'daisy_q2',
+        questionText:
+            'What is the best thing to do when you hear a warning or alarm?',
+        options: [
+          'Run away as fast as you can',
+          'Ignore it completely',
+          'Stop, look around, and check if it is real',
+          'Shout even louder',
+        ],
+        correctIndex: 2,
+        explanation:
+            'Before reacting to any alarm, it is important to stop, look '
+            'around, and check whether the danger is real.',
+        mascotEncouragement: 'Bonzer! That is exactly what Daisy learned!',
+      ),
+      ComprehensionQuestion(
+        id: 'daisy_q3',
+        questionText: 'Why is it important to check if an alarm is real?',
+        options: [
+          'Because loud sounds are always dangerous',
+          'Because some people use false alarms to trick others',
+          'Because alarms are always fake',
+          'Because checking is more fun than running',
+        ],
+        correctIndex: 1,
+        explanation:
+            'Some people or animals use false alarms to trick others into '
+            'doing what they want. Checking helps you avoid being tricked.',
+        mascotEncouragement: 'You are learning to think before you react!',
+      ),
+    ],
   ),
 ];

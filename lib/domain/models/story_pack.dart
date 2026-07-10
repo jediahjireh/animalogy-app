@@ -1,5 +1,6 @@
 import '../../core/constants/age_groups.dart';
 import '../../core/constants/safety_themes.dart';
+import 'comprehension_question.dart';
 import 'story_page.dart';
 import 'educator_guide.dart';
 
@@ -13,6 +14,7 @@ class StoryPack {
   final String synopsis;
   final List<StoryPage> pages;
   final EducatorGuide educatorGuide;
+  final List<ComprehensionQuestion> questions;
 
   const StoryPack({
     required this.id,
@@ -24,5 +26,6 @@ class StoryPack {
     required this.synopsis,
     required this.pages,
     required this.educatorGuide,
+    this.questions = const [],
   });
 }
