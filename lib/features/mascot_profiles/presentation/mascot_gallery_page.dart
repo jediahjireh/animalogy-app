@@ -8,6 +8,7 @@ import '../../../data/mascots/mascot_registry.dart';
 import '../../../domain/models/mascot.dart';
 import '../../../shared/widgets/badge_chip.dart';
 import '../../../shared/widgets/cartoon_card.dart';
+import '../../../shared/widgets/mascot_avatar.dart';
 
 class MascotGalleryPage extends StatelessWidget {
   const MascotGalleryPage({super.key});
@@ -76,25 +77,10 @@ class _MascotGridCard extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(
-            width: Dimensions.mascotAvatarMd,
-            height: Dimensions.mascotAvatarMd,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  color.withValues(alpha: 0.25),
-                  color.withValues(alpha: 0.08),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: color.withValues(alpha: 0.4),
-                width: Dimensions.borderMd,
-              ),
-            ),
-            child: Icon(mascot.icon, size: 30, color: color),
+          MascotAvatar(
+            mascot: mascot,
+            size: Dimensions.mascotAvatarMd,
+            borderColor: color,
           ),
           const SizedBox(height: Dimensions.sm),
           Text(

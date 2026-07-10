@@ -84,10 +84,26 @@ class StoryPackDetailPage extends ConsumerWidget {
                     color: pack.safetyTheme.color,
                   ),
                   const SizedBox(height: Dimensions.sm),
-                  Icon(
-                    mascot.icon,
-                    size: 32,
-                    color: pack.safetyTheme.color.withValues(alpha: 0.6),
+                  ClipOval(
+                    child: SizedBox(
+                      width: 48,
+                      height: 48,
+                      child: mascot.imageUrl.isNotEmpty
+                          ? Image.network(
+                              mascot.imageUrl,
+                              fit: BoxFit.contain,
+                              errorBuilder: (context, error, stackTrace) => Icon(
+                                mascot.icon,
+                                size: 32,
+                                color: pack.safetyTheme.color.withValues(alpha: 0.6),
+                              ),
+                            )
+                          : Icon(
+                              mascot.icon,
+                              size: 32,
+                              color: pack.safetyTheme.color.withValues(alpha: 0.6),
+                            ),
+                    ),
                   ),
                 ],
               ),
@@ -110,7 +126,18 @@ class StoryPackDetailPage extends ConsumerWidget {
                     shape: BoxShape.circle,
                     border: Border.all(color: regionColor, width: 1.5),
                   ),
-                  child: Icon(mascot.icon, size: 14, color: regionColor),
+                  clipBehavior: Clip.antiAlias,
+                  child: mascot.imageUrl.isNotEmpty
+                      ? Padding(
+                          padding: const EdgeInsets.all(2),
+                          child: Image.network(
+                            mascot.imageUrl,
+                            fit: BoxFit.contain,
+                            errorBuilder: (context, error, stackTrace) =>
+                                Icon(mascot.icon, size: 14, color: regionColor),
+                          ),
+                        )
+                      : Icon(mascot.icon, size: 14, color: regionColor),
                 ),
                 const SizedBox(width: Dimensions.sm),
                 Text(

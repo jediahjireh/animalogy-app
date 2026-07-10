@@ -10,6 +10,7 @@ class Mascot {
   final String safetyRole;
   final String catchphrase;
   final IconData icon;
+  final String imageUrl;
 
   const Mascot({
     required this.id,
@@ -21,5 +22,6 @@ class Mascot {
     required this.safetyRole,
     required this.catchphrase,
     required this.icon,
+    required this.imageUrl,
   });
 }

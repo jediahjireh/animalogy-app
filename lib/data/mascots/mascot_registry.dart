@@ -18,6 +18,7 @@ abstract final class MascotRegistry {
           'The Lookout \u2014 teaches about spotting deception and false information',
       catchphrase: 'Look before you leap!',
       icon: Icons.visibility,
+      imageUrl: 'https://openclipart.org/image/800px/355165',
     ),
     Mascot(
       id: 'daisy_dingo',
@@ -34,6 +35,7 @@ abstract final class MascotRegistry {
           'The Skeptic \u2014 teaches about questioning false alarms and misinformation',
       catchphrase: 'If it sounds dodgy, it probably is!',
       icon: Icons.hearing,
+      imageUrl: 'https://openclipart.org/image/800px/355582',
     ),
     Mascot(
       id: 'tara_turtle',
@@ -50,6 +52,7 @@ abstract final class MascotRegistry {
           'The Wise One \u2014 teaches about resisting flattery and manipulation',
       catchphrase: 'Sweet words can hide sharp teeth.',
       icon: Icons.shield,
+      imageUrl: 'https://openclipart.org/image/800px/355182',
     ),
     Mascot(
       id: 'luma_capybara',
@@ -65,6 +68,7 @@ abstract final class MascotRegistry {
       safetyRole: 'The Sensor \u2014 teaches about recognizing hidden dangers',
       catchphrase: 'Not everything friendly is safe.',
       icon: Icons.search,
+      imageUrl: 'https://openclipart.org/image/800px/355183',
     ),
     Mascot(
       id: 'ricky_raccoon',
@@ -81,6 +85,7 @@ abstract final class MascotRegistry {
           'The Street-Smart One \u2014 teaches about trust and betrayal',
       catchphrase: 'Trust is earned, not given.',
       icon: Icons.psychology,
+      imageUrl: 'https://openclipart.org/image/800px/355825',
     ),
   ];
 

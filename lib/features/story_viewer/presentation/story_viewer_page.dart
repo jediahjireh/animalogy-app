@@ -38,6 +38,7 @@ class _StoryViewerPageState extends ConsumerState<StoryViewerPage> {
   late StoryPack _pack;
   late List<_InterleavedPage> _pages;
   late String _mascotName;
+  late String _mascotImageUrl;
 
   int _currentPage = 0;
   bool _showCompletion = false;
@@ -49,7 +50,9 @@ class _StoryViewerPageState extends ConsumerState<StoryViewerPage> {
   void initState() {
     super.initState();
     _pack = StoryPackRegistry.getById(widget.packId);
-    _mascotName = MascotRegistry.getById(_pack.mascotId).name;
+    final mascot = MascotRegistry.getById(_pack.mascotId);
+    _mascotName = mascot.name;
+    _mascotImageUrl = mascot.imageUrl;
     _pages = _buildInterleavedPages();
 
     final progress = ref.read(readingProgressProvider);
@@ -153,6 +156,7 @@ class _StoryViewerPageState extends ConsumerState<StoryViewerPage> {
       return Scaffold(
         body: StoryCompleteOverlay(
           mascotName: _mascotName,
+          mascotImageUrl: _mascotImageUrl,
           stars: StoryScore.calculateStars(
             _correctAnswers,
             _pack.questions.length,
@@ -249,6 +253,7 @@ class _StoryViewerPageState extends ConsumerState<StoryViewerPage> {
                     key: ValueKey('q_${page.index}_$_resetCount'),
                     question: _pack.questions[page.index],
                     mascotName: _mascotName,
+                    mascotImageUrl: _mascotImageUrl,
                     onAnswered: _goNext,
                     onResult: (correct) {
                       _answeredQuestions.add(page.index);

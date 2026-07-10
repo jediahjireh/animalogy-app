@@ -7,6 +7,7 @@ import '../../../data/mascots/mascot_registry.dart';
 import '../../../data/story_packs/story_pack_registry.dart';
 import '../../../shared/widgets/badge_chip.dart';
 import '../../../shared/widgets/cartoon_card.dart';
+import '../../../shared/widgets/mascot_avatar.dart';
 import '../../../shared/widgets/speech_bubble.dart';
 
 class MascotDetailPage extends StatelessWidget {
@@ -36,25 +37,11 @@ class MascotDetailPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(
-              width: Dimensions.mascotAvatarXl,
-              height: Dimensions.mascotAvatarXl,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    color.withValues(alpha: 0.3),
-                    color.withValues(alpha: 0.08),
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: color.withValues(alpha: 0.4),
-                  width: Dimensions.borderThick,
-                ),
-              ),
-              child: Icon(mascot.icon, size: 64, color: color),
+            MascotAvatar(
+              mascot: mascot,
+              size: Dimensions.mascotAvatarXl,
+              borderColor: color,
+              borderWidth: Dimensions.borderThick,
             ),
             const SizedBox(height: Dimensions.md),
             Text(

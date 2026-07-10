@@ -75,6 +75,7 @@ class RegionSelectionPage extends ConsumerWidget {
                           region: region,
                           mascotName: mascot.name,
                           mascotIcon: mascot.icon,
+                          mascotImageUrl: mascot.imageUrl,
                           onTap: () async {
                             await ref
                                 .read(selectedRegionProvider.notifier)
@@ -108,12 +109,14 @@ class _RegionGridCard extends StatelessWidget {
   final Region region;
   final String mascotName;
   final IconData mascotIcon;
+  final String mascotImageUrl;
   final VoidCallback onTap;
 
   const _RegionGridCard({
     required this.region,
     required this.mascotName,
     required this.mascotIcon,
+    this.mascotImageUrl = '',
     required this.onTap,
   });
 
@@ -145,7 +148,24 @@ class _RegionGridCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(mascotIcon, size: Dimensions.iconSm, color: region.color),
+              if (mascotImageUrl.isNotEmpty)
+                ClipOval(
+                  child: SizedBox(
+                    width: Dimensions.iconSm + 4,
+                    height: Dimensions.iconSm + 4,
+                    child: Image.network(
+                      mascotImageUrl,
+                      fit: BoxFit.contain,
+                      errorBuilder: (context, error, stackTrace) => Icon(
+                        mascotIcon,
+                        size: Dimensions.iconSm,
+                        color: region.color,
+                      ),
+                    ),
+                  ),
+                )
+              else
+                Icon(mascotIcon, size: Dimensions.iconSm, color: region.color),
               const SizedBox(width: Dimensions.xs),
               Flexible(
                 child: Text(

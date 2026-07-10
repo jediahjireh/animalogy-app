@@ -11,6 +11,7 @@ import '../../../data/story_packs/story_pack_registry.dart';
 import '../../../domain/models/app_mode.dart';
 import '../../../shared/widgets/cartoon_button.dart';
 import '../../../shared/widgets/cartoon_card.dart';
+import '../../../shared/widgets/mascot_avatar.dart';
 import '../../../shared/widgets/speech_bubble.dart';
 import '../../../shared/widgets/star_display.dart';
 import '../../my_library/providers/library_providers.dart';
@@ -76,23 +77,10 @@ class HomePage extends ConsumerWidget {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
-                          width: Dimensions.mascotAvatarMd,
-                          height: Dimensions.mascotAvatarMd,
-                          decoration: BoxDecoration(
-                            color: (region?.color ?? AnimalColors.primary)
-                                .withValues(alpha: 0.15),
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: region?.color ?? AnimalColors.primary,
-                              width: Dimensions.borderMd,
-                            ),
-                          ),
-                          child: Icon(
-                            mascot.icon,
-                            size: 32,
-                            color: region?.color ?? AnimalColors.primary,
-                          ),
+                        MascotAvatar(
+                          mascot: mascot,
+                          size: Dimensions.mascotAvatarMd,
+                          borderColor: region?.color ?? AnimalColors.primary,
                         ),
                         const SizedBox(width: Dimensions.sm),
                         Expanded(

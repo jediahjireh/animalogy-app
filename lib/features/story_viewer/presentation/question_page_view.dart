@@ -10,6 +10,7 @@ import '../../../shared/widgets/speech_bubble.dart';
 class QuestionPageView extends StatefulWidget {
   final ComprehensionQuestion question;
   final String mascotName;
+  final String mascotImageUrl;
   final VoidCallback onAnswered;
   final void Function(bool correct) onResult;
 
@@ -17,6 +18,7 @@ class QuestionPageView extends StatefulWidget {
     super.key,
     required this.question,
     required this.mascotName,
+    this.mascotImageUrl = '',
     required this.onAnswered,
     required this.onResult,
   });
@@ -50,11 +52,25 @@ class _QuestionPageViewState extends State<QuestionPageView> {
                     width: Dimensions.borderMd,
                   ),
                 ),
-                child: const Icon(
-                  Icons.pets,
-                  color: AnimalColors.primary,
-                  size: 22,
-                ),
+                clipBehavior: Clip.antiAlias,
+                child: widget.mascotImageUrl.isNotEmpty
+                    ? Padding(
+                        padding: const EdgeInsets.all(4),
+                        child: Image.network(
+                          widget.mascotImageUrl,
+                          fit: BoxFit.contain,
+                          errorBuilder: (context, error, stackTrace) => const Icon(
+                            Icons.pets,
+                            color: AnimalColors.primary,
+                            size: 22,
+                          ),
+                        ),
+                      )
+                    : const Icon(
+                        Icons.pets,
+                        color: AnimalColors.primary,
+                        size: 22,
+                      ),
               ),
               const SizedBox(width: Dimensions.sm),
               Expanded(

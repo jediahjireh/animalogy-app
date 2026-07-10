@@ -1,8 +1,8 @@
 name: animalogy
 description: "Animalogy: Learn Safety Through Animal Stories"
-publish_to: 'none'
+publish_to: "none"
 version: 1.0.0+1
-homepage: https://github.com/jediahjireh/animalogy
+homepage: https://github.com/jediahjireh/animalogy-app
 
 environment:
   sdk: ^3.10.7
