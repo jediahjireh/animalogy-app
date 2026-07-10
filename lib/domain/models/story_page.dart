@@ -6,6 +6,7 @@ class StoryPage {
   final String visualDescription;
   final String learningCue;
   final Color sceneColor;
+  final String imageUrl;
 
   const StoryPage({
     required this.pageNumber,
@@ -13,5 +14,6 @@ class StoryPage {
     required this.visualDescription,
     required this.learningCue,
     required this.sceneColor,
+    this.imageUrl = '',
   });
 }

@@ -40,6 +40,7 @@ final List<StoryPack> kaiaMeerkatPacks = [
             'Ask the children what their favourite part of lunchtime is. '
             'Feeling safe and happy with friends is something we all enjoy.',
         sceneColor: Color(0xFFFFECB3),
+        imageUrl: 'https://openclipart.org/image/800px/355165',
       ),
       StoryPage(
         pageNumber: 2,
@@ -56,6 +57,7 @@ final List<StoryPack> kaiaMeerkatPacks = [
             'When someone shouts something scary, we often react before '
             'checking if it is true.',
         sceneColor: Color(0xFFFFE0B2),
+        imageUrl: 'https://openclipart.org/image/800px/355412',
       ),
       StoryPage(
         pageNumber: 3,
@@ -71,6 +73,7 @@ final List<StoryPack> kaiaMeerkatPacks = [
             'Discuss how trust builds over time. Someone who seems kind '
             'again and again can make us believe they will always be kind.',
         sceneColor: Color(0xFFC8E6C9),
+        imageUrl: 'https://openclipart.org/image/800px/355814',
       ),
       StoryPage(
         pageNumber: 4,
@@ -87,6 +90,7 @@ final List<StoryPack> kaiaMeerkatPacks = [
             'Was there real danger, or did the bird have another reason '
             'to call out?',
         sceneColor: Color(0xFFFFF9C4),
+        imageUrl: 'https://openclipart.org/image/800px/355961',
       ),
       StoryPage(
         pageNumber: 5,
@@ -102,6 +106,7 @@ final List<StoryPack> kaiaMeerkatPacks = [
             'Help children name the feeling of being tricked by someone '
             'they trusted. This is what deception feels like.',
         sceneColor: Color(0xFFFFCDD2),
+        imageUrl: 'https://openclipart.org/image/800px/355131',
       ),
       StoryPage(
         pageNumber: 6,
@@ -117,6 +122,7 @@ final List<StoryPack> kaiaMeerkatPacks = [
             'This is a key moment to talk about online strangers who seem '
             'friendly but may have hidden motives, just like the drongo.',
         sceneColor: Color(0xFFBBDEFB),
+        imageUrl: 'https://openclipart.org/image/800px/355165',
       ),
       StoryPage(
         pageNumber: 7,
@@ -133,6 +139,7 @@ final List<StoryPack> kaiaMeerkatPacks = [
             'We can do this online too \u2014 check before we click, share, '
             'or believe.',
         sceneColor: Color(0xFFB2DFDB),
+        imageUrl: 'https://openclipart.org/image/800px/355184',
       ),
       StoryPage(
         pageNumber: 8,
@@ -148,6 +155,7 @@ final List<StoryPack> kaiaMeerkatPacks = [
             'Wrap up by asking children what they will do differently when '
             'someone online tells them something surprising or scary.',
         sceneColor: Color(0xFFFFF8E1),
+        imageUrl: 'https://openclipart.org/image/800px/355165',
       ),
     ],
     educatorGuide: EducatorGuide(

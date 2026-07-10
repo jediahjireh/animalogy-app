@@ -36,6 +36,7 @@ final List<StoryPack> daisyDingoPacks = [
             'Ask the children what they notice about Daisy\'s pack travelling '
             'together. Why might animals stick close to their family group?',
         sceneColor: Colors.orange.shade100,
+        imageUrl: 'https://openclipart.org/image/800px/355582',
       ),
       StoryPage(
         pageNumber: 2,
@@ -51,6 +52,7 @@ final List<StoryPack> daisyDingoPacks = [
             'Discuss how animals use sounds to warn each other. Have the '
             'children ever heard a bird call that sounded like laughter?',
         sceneColor: Colors.brown.shade100,
+        imageUrl: 'https://openclipart.org/image/800px/321966',
       ),
       StoryPage(
         pageNumber: 3,
@@ -66,6 +68,7 @@ final List<StoryPack> daisyDingoPacks = [
             'Talk about trust. What makes someone a trusted lookout or helper? '
             'How did the kookaburra earn the pack\'s trust?',
         sceneColor: Colors.green.shade100,
+        imageUrl: 'https://openclipart.org/image/800px/354992',
       ),
       StoryPage(
         pageNumber: 4,
@@ -82,6 +85,7 @@ final List<StoryPack> daisyDingoPacks = [
             'Pause and ask: do you think there is really danger this time? '
             'What clues could Daisy look for to find out?',
         sceneColor: Colors.yellow.shade100,
+        imageUrl: 'https://openclipart.org/image/800px/355582',
       ),
       StoryPage(
         pageNumber: 5,
@@ -98,6 +102,7 @@ final List<StoryPack> daisyDingoPacks = [
             'Ask how Daisy feels seeing this. Has anyone ever been tricked by '
             'someone they trusted? How did it feel?',
         sceneColor: Colors.red.shade100,
+        imageUrl: 'https://openclipart.org/image/800px/355895',
       ),
       StoryPage(
         pageNumber: 6,
@@ -113,6 +118,7 @@ final List<StoryPack> daisyDingoPacks = [
             'Discuss the mum\'s advice. What does it mean to check if a '
             'warning matches what you can see for yourself?',
         sceneColor: Colors.blue.shade100,
+        imageUrl: 'https://openclipart.org/image/800px/355582',
       ),
       StoryPage(
         pageNumber: 7,
@@ -129,6 +135,7 @@ final List<StoryPack> daisyDingoPacks = [
             'Practice the stop-look-check steps with the children. What are '
             'three things Daisy does before deciding to run?',
         sceneColor: Colors.teal.shade100,
+        imageUrl: 'https://openclipart.org/image/800px/355582',
       ),
       StoryPage(
         pageNumber: 8,
@@ -144,6 +151,7 @@ final List<StoryPack> daisyDingoPacks = [
             'Reflect on the story\'s message together. When should we double-'
             'check what someone tells us instead of reacting right away?',
         sceneColor: Colors.amber.shade50,
+        imageUrl: 'https://openclipart.org/image/800px/355582',
       ),
     ],
     educatorGuide: EducatorGuide(

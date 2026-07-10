@@ -37,6 +37,7 @@ final List<StoryPack> lumaCapybaraPacks = [
             'Ask the children what their favourite place to play with friends is '
             'and what makes them feel safe there.',
         sceneColor: Colors.green.shade100,
+        imageUrl: 'https://openclipart.org/image/800px/355183',
       ),
       StoryPage(
         pageNumber: 2,
@@ -52,6 +53,7 @@ final List<StoryPack> lumaCapybaraPacks = [
             'Ask: have you ever seen something new appear in a familiar place and '
             'assumed it was harmless because everything else around it was normal?',
         sceneColor: Colors.brown.shade100,
+        imageUrl: 'https://openclipart.org/image/800px/355631',
       ),
       StoryPage(
         pageNumber: 3,
@@ -67,6 +69,7 @@ final List<StoryPack> lumaCapybaraPacks = [
             'Discuss how something staying quiet and still for a long time can make '
             'us believe it is safe, even when we never actually checked.',
         sceneColor: Colors.teal.shade100,
+        imageUrl: 'https://openclipart.org/image/800px/355183',
       ),
       StoryPage(
         pageNumber: 4,
@@ -82,6 +85,7 @@ final List<StoryPack> lumaCapybaraPacks = [
             'Ask: what small warning signs might you notice if something online or '
             'in real life is not what it seems?',
         sceneColor: Colors.yellow.shade100,
+        imageUrl: 'https://openclipart.org/image/800px/355307',
       ),
       StoryPage(
         pageNumber: 5,
@@ -97,6 +101,7 @@ final List<StoryPack> lumaCapybaraPacks = [
             'Talk about the courage it takes to speak up when you notice something '
             'wrong, even if everyone else seems unbothered.',
         sceneColor: Colors.red.shade100,
+        imageUrl: 'https://openclipart.org/image/800px/355663',
       ),
       StoryPage(
         pageNumber: 6,
@@ -113,6 +118,7 @@ final List<StoryPack> lumaCapybaraPacks = [
             'Highlight how telling a trusted adult or friend about something '
             'suspicious can protect everyone, not just yourself.',
         sceneColor: Colors.orange.shade100,
+        imageUrl: 'https://openclipart.org/image/800px/355205',
       ),
       StoryPage(
         pageNumber: 7,
@@ -129,6 +135,7 @@ final List<StoryPack> lumaCapybaraPacks = [
             'invisible on purpose. Ask who they would talk to if something felt '
             'off.',
         sceneColor: Colors.blue.shade100,
+        imageUrl: 'https://openclipart.org/image/800px/355183',
       ),
       StoryPage(
         pageNumber: 8,
@@ -144,6 +151,7 @@ final List<StoryPack> lumaCapybaraPacks = [
             'End with a reflection: what is one thing you will pay more attention '
             'to from now on?',
         sceneColor: Colors.amber.shade50,
+        imageUrl: 'https://openclipart.org/image/800px/355183',
       ),
     ],
     educatorGuide: EducatorGuide(

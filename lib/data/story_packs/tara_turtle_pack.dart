@@ -39,6 +39,7 @@ final List<StoryPack> taraTurtlePacks = [
             'Ask the children what they notice about Tara and where she '
             'lives. What makes her feel safe and happy?',
         sceneColor: Colors.green.shade100,
+        imageUrl: 'https://openclipart.org/image/800px/355182',
       ),
       StoryPage(
         pageNumber: 2,
@@ -54,6 +55,7 @@ final List<StoryPack> taraTurtlePacks = [
             'Pause and ask: how does the crocodile make Tara feel with '
             'his words? Is he being kind or is something else going on?',
         sceneColor: Colors.teal.shade100,
+        imageUrl: 'https://openclipart.org/image/800px/355569',
       ),
       StoryPage(
         pageNumber: 3,
@@ -69,6 +71,7 @@ final List<StoryPack> taraTurtlePacks = [
             'Discuss why the crocodile is offering to help. What would '
             'happen if Tara climbed onto a crocodile in the water?',
         sceneColor: Colors.blue.shade100,
+        imageUrl: 'https://openclipart.org/image/800px/355721',
       ),
       StoryPage(
         pageNumber: 4,
@@ -85,6 +88,7 @@ final List<StoryPack> taraTurtlePacks = [
             'said something nice to you that made you want to do what '
             'they asked?',
         sceneColor: Colors.amber.shade100,
+        imageUrl: 'https://openclipart.org/image/800px/355182',
       ),
       StoryPage(
         pageNumber: 5,
@@ -100,6 +104,7 @@ final List<StoryPack> taraTurtlePacks = [
             'Talk about the crane as a trusted adult. Who in the '
             "children's lives would warn them like the crane warned Tara?",
         sceneColor: Colors.orange.shade100,
+        imageUrl: 'https://openclipart.org/image/800px/355909',
       ),
       StoryPage(
         pageNumber: 6,
@@ -116,6 +121,7 @@ final List<StoryPack> taraTurtlePacks = [
             'crane had not spoken up? Why did the crocodile pretend to '
             'be nice?',
         sceneColor: Colors.red.shade100,
+        imageUrl: 'https://openclipart.org/image/800px/355182',
       ),
       StoryPage(
         pageNumber: 7,
@@ -132,6 +138,7 @@ final List<StoryPack> taraTurtlePacks = [
             'understand that compliments can sometimes be used to trick '
             'people.',
         sceneColor: Colors.purple.shade100,
+        imageUrl: 'https://openclipart.org/image/800px/355622',
       ),
       StoryPage(
         pageNumber: 8,
@@ -150,6 +157,7 @@ final List<StoryPack> taraTurtlePacks = [
             'the lesson in their own words and think of a time when '
             'actions did not match words.',
         sceneColor: Colors.amber.shade50,
+        imageUrl: 'https://openclipart.org/image/800px/355182',
       ),
     ],
     educatorGuide: EducatorGuide(

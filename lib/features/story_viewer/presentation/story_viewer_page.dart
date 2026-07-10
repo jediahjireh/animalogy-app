@@ -350,32 +350,30 @@ class _StoryPageView extends StatelessWidget {
                 width: Dimensions.borderMd,
               ),
             ),
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.image_outlined,
-                    size: 48,
-                    color: AnimalColors.textTertiary.withValues(alpha: 0.5),
-                  ),
-                  const SizedBox(height: Dimensions.sm),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: Dimensions.lg,
+            clipBehavior: Clip.antiAlias,
+            child: page.imageUrl.isNotEmpty
+                ? Image.network(
+                    page.imageUrl,
+                    fit: BoxFit.contain,
+                    width: double.infinity,
+                    errorBuilder: (context, error, stackTrace) => _ImagePlaceholder(
+                      description: page.visualDescription,
                     ),
-                    child: Text(
-                      page.visualDescription,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: AnimalColors.textTertiary,
-                        fontStyle: FontStyle.italic,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return Center(
+                        child: CircularProgressIndicator(
+                          value: loadingProgress.expectedTotalBytes != null
+                              ? loadingProgress.cumulativeBytesLoaded /
+                                  loadingProgress.expectedTotalBytes!
+                              : null,
+                          color: AnimalColors.primary.withValues(alpha: 0.5),
+                          strokeWidth: 2,
+                        ),
+                      );
+                    },
+                  )
+                : _ImagePlaceholder(description: page.visualDescription),
           ),
           const SizedBox(height: Dimensions.lg),
           Text(
@@ -420,6 +418,42 @@ class _StoryPageView extends StatelessWidget {
               ),
             ),
           ],
+        ],
+      ),
+    );
+  }
+}
+
+class _ImagePlaceholder extends StatelessWidget {
+  final String description;
+
+  const _ImagePlaceholder({required this.description});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.image_outlined,
+            size: 48,
+            color: AnimalColors.textTertiary.withValues(alpha: 0.5),
+          ),
+          const SizedBox(height: Dimensions.sm),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: Dimensions.lg,
+            ),
+            child: Text(
+              description,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: AnimalColors.textTertiary,
+                fontStyle: FontStyle.italic,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
         ],
       ),
     );

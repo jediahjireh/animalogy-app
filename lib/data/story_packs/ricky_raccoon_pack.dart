@@ -36,6 +36,7 @@ final List<StoryPack> rickyRaccoonPacks = [
         learningCue:
             'Ask children what makes them feel safe in familiar places.',
         sceneColor: Color(0xFFC5CAE9),
+        imageUrl: 'https://openclipart.org/image/800px/355825',
       ),
       StoryPage(
         pageNumber: 2,
@@ -51,6 +52,7 @@ final List<StoryPack> rickyRaccoonPacks = [
             'Discuss what makes someone seem trustworthy and why animals might '
             'look up to the owl.',
         sceneColor: Color(0xFFD1C4E9),
+        imageUrl: 'https://openclipart.org/image/800px/355964',
       ),
       StoryPage(
         pageNumber: 3,
@@ -64,6 +66,7 @@ final List<StoryPack> rickyRaccoonPacks = [
         learningCue:
             'Explore the idea of protectors in everyday life and why we rely on them.',
         sceneColor: Color(0xFFC8E6C9),
+        imageUrl: 'https://openclipart.org/image/800px/355811',
       ),
       StoryPage(
         pageNumber: 4,
@@ -78,6 +81,7 @@ final List<StoryPack> rickyRaccoonPacks = [
         learningCue:
             'Ask how it feels when someone you trust tells you something scary.',
         sceneColor: Color(0xFFFFF9C4),
+        imageUrl: 'https://openclipart.org/image/800px/355825',
       ),
       StoryPage(
         pageNumber: 5,
@@ -93,6 +97,7 @@ final List<StoryPack> rickyRaccoonPacks = [
             'Help children identify the moment where trust was broken and how '
             'the owl used its position unfairly.',
         sceneColor: Color(0xFFFFCDD2),
+        imageUrl: 'https://openclipart.org/image/800px/355273',
       ),
       StoryPage(
         pageNumber: 6,
@@ -108,6 +113,7 @@ final List<StoryPack> rickyRaccoonPacks = [
             'Discuss how power and position can be misused by people who seem '
             'trustworthy.',
         sceneColor: Color(0xFFEEEEEE),
+        imageUrl: 'https://openclipart.org/image/800px/355825',
       ),
       StoryPage(
         pageNumber: 7,
@@ -123,6 +129,7 @@ final List<StoryPack> rickyRaccoonPacks = [
             'Encourage children to think about trusted adults they can talk to '
             'when something feels wrong.',
         sceneColor: Color(0xFFBBDEFB),
+        imageUrl: 'https://openclipart.org/image/800px/355065',
       ),
       StoryPage(
         pageNumber: 8,
@@ -137,6 +144,7 @@ final List<StoryPack> rickyRaccoonPacks = [
         learningCue:
             'Reinforce that questioning someone in authority is brave, not rude.',
         sceneColor: Color(0xFFFFF8E1),
+        imageUrl: 'https://openclipart.org/image/800px/355825',
       ),
     ],
     educatorGuide: EducatorGuide(
