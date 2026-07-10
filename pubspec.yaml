@@ -18,6 +18,9 @@ dependencies:
   shared_preferences: ^2.5.4
   flutter_animate: ^4.5.2
   smooth_page_indicator: ^1.2.1
+  pdf: ^3.11.6
+  printing: ^5.14.2
+  share_plus: ^11.0.0
 
 dev_dependencies:
   flutter_test:
