@@ -26,7 +26,11 @@ abstract final class AnimalTheme {
         color: AnimalColors.surface,
         elevation: Dimensions.cardElevation,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(Dimensions.radiusLg),
+          borderRadius: BorderRadius.circular(Dimensions.radiusXl),
+          side: const BorderSide(
+            color: AnimalColors.border,
+            width: Dimensions.borderThin,
+          ),
         ),
       ),
       chipTheme: ChipThemeData(
@@ -34,6 +38,15 @@ abstract final class AnimalTheme {
         selectedColor: AnimalColors.primaryLight,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(Dimensions.radiusRound),
+          side: const BorderSide(
+            color: AnimalColors.border,
+            width: Dimensions.borderThin,
+          ),
+        ),
+        labelStyle: textTheme.labelMedium,
+        padding: const EdgeInsets.symmetric(
+          horizontal: Dimensions.sm,
+          vertical: Dimensions.xs,
         ),
       ),
       appBarTheme: AppBarTheme(
@@ -42,25 +55,37 @@ abstract final class AnimalTheme {
         elevation: 0,
         scrolledUnderElevation: 0,
         centerTitle: true,
-        titleTextStyle: textTheme.titleLarge,
+        titleTextStyle: textTheme.titleLarge?.copyWith(
+          fontWeight: FontWeight.w800,
+        ),
       ),
       navigationBarTheme: NavigationBarThemeData(
         backgroundColor: AnimalColors.surface,
         indicatorColor: AnimalColors.primaryLight,
-        labelTextStyle: WidgetStatePropertyAll(textTheme.labelMedium),
+        elevation: 8,
+        labelTextStyle: WidgetStatePropertyAll(
+          textTheme.labelMedium?.copyWith(fontWeight: FontWeight.w700),
+        ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: AnimalColors.primary,
           foregroundColor: AnimalColors.textOnPrimary,
+          elevation: Dimensions.buttonElevation,
+          shadowColor: AnimalColors.buttonShadow,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(Dimensions.radiusLg),
+            borderRadius: BorderRadius.circular(Dimensions.radiusXl),
+            side: const BorderSide(
+              color: AnimalColors.primaryDark,
+              width: Dimensions.borderMd,
+            ),
           ),
           padding: const EdgeInsets.symmetric(
-            horizontal: Dimensions.lg,
+            horizontal: Dimensions.xl,
             vertical: Dimensions.md,
           ),
           textStyle: textTheme.labelLarge?.copyWith(
+            fontWeight: FontWeight.w800,
             color: AnimalColors.textOnPrimary,
           ),
         ),
@@ -68,19 +93,22 @@ abstract final class AnimalTheme {
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
           foregroundColor: AnimalColors.primary,
-          side: const BorderSide(color: AnimalColors.primary),
+          side: const BorderSide(
+            color: AnimalColors.primary,
+            width: Dimensions.borderMd,
+          ),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(Dimensions.radiusLg),
+            borderRadius: BorderRadius.circular(Dimensions.radiusXl),
           ),
           padding: const EdgeInsets.symmetric(
-            horizontal: Dimensions.lg,
+            horizontal: Dimensions.xl,
             vertical: Dimensions.md,
           ),
         ),
       ),
       dividerTheme: const DividerThemeData(
         color: AnimalColors.divider,
-        thickness: 1,
+        thickness: 1.5,
       ),
     );
   }
