@@ -11,6 +11,11 @@ import '../../../domain/models/app_mode.dart';
 import '../../../domain/models/story_pack.dart';
 import '../../../domain/models/story_page.dart';
 import '../../../domain/models/story_score.dart';
+import '../../../shared/painters/india_painter.dart';
+import '../../../shared/painters/outback_painter.dart';
+import '../../../shared/painters/rainforest_painter.dart';
+import '../../../shared/painters/savanna_painter.dart';
+import '../../../shared/painters/woodland_painter.dart';
 import '../../../shared/widgets/cartoon_button.dart';
 import '../../my_library/providers/library_providers.dart';
 import 'question_page_view.dart';
@@ -263,6 +268,7 @@ class _StoryViewerPageState extends ConsumerState<StoryViewerPage> {
                 }
                 return _StoryPageView(
                   page: _pack.pages[page.index],
+                  regionId: _pack.regionId,
                   isChildMode: appMode == AppMode.child,
                 );
               },
@@ -329,9 +335,25 @@ class _StoryViewerPageState extends ConsumerState<StoryViewerPage> {
 
 class _StoryPageView extends StatelessWidget {
   final StoryPage page;
+  final String regionId;
   final bool isChildMode;
 
-  const _StoryPageView({required this.page, required this.isChildMode});
+  const _StoryPageView({
+    required this.page,
+    required this.regionId,
+    required this.isChildMode,
+  });
+
+  static CustomPainter _painterForRegion(String regionId) {
+    return switch (regionId) {
+      'southern_africa' => SavannaPainter(),
+      'australia' => OutbackPainter(),
+      'india' => IndiaPainter(),
+      'brazil' => RainforestPainter(),
+      'north_america' => WoodlandPainter(),
+      _ => SavannaPainter(),
+    };
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -343,7 +365,6 @@ class _StoryPageView extends StatelessWidget {
           Container(
             height: 220,
             decoration: BoxDecoration(
-              color: page.sceneColor,
               borderRadius: BorderRadius.circular(Dimensions.radiusXl),
               border: Border.all(
                 color: AnimalColors.borderBold.withValues(alpha: 0.3),
@@ -351,29 +372,43 @@ class _StoryPageView extends StatelessWidget {
               ),
             ),
             clipBehavior: Clip.antiAlias,
-            child: page.imageUrl.isNotEmpty
-                ? Image.network(
-                    page.imageUrl,
-                    fit: BoxFit.contain,
-                    width: double.infinity,
-                    errorBuilder: (context, error, stackTrace) => _ImagePlaceholder(
-                      description: page.visualDescription,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                CustomPaint(
+                  painter: _painterForRegion(regionId),
+                  size: Size.infinite,
+                ),
+                if (page.imageUrl.isNotEmpty)
+                  Positioned(
+                    right: 12,
+                    bottom: 8,
+                    child: SizedBox(
+                      height: 150,
+                      width: 150,
+                      child: Image.network(
+                        page.imageUrl,
+                        fit: BoxFit.contain,
+                        errorBuilder: (context, error, stackTrace) =>
+                            const SizedBox.shrink(),
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return Center(
+                            child: CircularProgressIndicator(
+                              value: loadingProgress.expectedTotalBytes != null
+                                  ? loadingProgress.cumulativeBytesLoaded /
+                                      loadingProgress.expectedTotalBytes!
+                                  : null,
+                              color: Colors.white.withValues(alpha: 0.7),
+                              strokeWidth: 2,
+                            ),
+                          );
+                        },
+                      ),
                     ),
-                    loadingBuilder: (context, child, loadingProgress) {
-                      if (loadingProgress == null) return child;
-                      return Center(
-                        child: CircularProgressIndicator(
-                          value: loadingProgress.expectedTotalBytes != null
-                              ? loadingProgress.cumulativeBytesLoaded /
-                                  loadingProgress.expectedTotalBytes!
-                              : null,
-                          color: AnimalColors.primary.withValues(alpha: 0.5),
-                          strokeWidth: 2,
-                        ),
-                      );
-                    },
-                  )
-                : _ImagePlaceholder(description: page.visualDescription),
+                  ),
+              ],
+            ),
           ),
           const SizedBox(height: Dimensions.lg),
           Text(
@@ -424,38 +459,3 @@ class _StoryPageView extends StatelessWidget {
   }
 }
 
-class _ImagePlaceholder extends StatelessWidget {
-  final String description;
-
-  const _ImagePlaceholder({required this.description});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.image_outlined,
-            size: 48,
-            color: AnimalColors.textTertiary.withValues(alpha: 0.5),
-          ),
-          const SizedBox(height: Dimensions.sm),
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: Dimensions.lg,
-            ),
-            child: Text(
-              description,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: AnimalColors.textTertiary,
-                fontStyle: FontStyle.italic,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
