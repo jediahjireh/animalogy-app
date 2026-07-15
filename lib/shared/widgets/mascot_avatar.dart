@@ -51,18 +51,11 @@ class MascotAvatar extends StatelessWidget {
               child: Image.network(
                 mascot.imageUrl,
                 fit: BoxFit.contain,
-                errorBuilder: (context, error, stackTrace) => Icon(
-                  mascot.icon,
-                  size: size * 0.45,
-                  color: color,
-                ),
+                errorBuilder: (context, error, stackTrace) =>
+                    Icon(mascot.icon, size: size * 0.45, color: color),
               ),
             )
-          : Icon(
-              mascot.icon,
-              size: size * 0.45,
-              color: color,
-            ),
+          : Icon(mascot.icon, size: size * 0.45, color: color),
     );
   }
 }

@@ -7,7 +7,7 @@ abstract final class MascotRegistry {
       id: 'kaia_meerkat',
       name: 'Kaia',
       species: 'Meerkat',
-      regionId: 'southern_africa',
+      regionId: 'south_africa',
       personality: 'Watchful, brave, and protective of her colony',
       bio:
           'Kaia grew up in a bustling meerkat family in the Kalahari Desert. '
@@ -74,7 +74,7 @@ abstract final class MascotRegistry {
       id: 'ricky_raccoon',
       name: 'Ricky',
       species: 'Raccoon',
-      regionId: 'north_america',
+      regionId: 'usa',
       personality: 'Clever, curious, and resilient',
       bio:
           'Ricky lives at the edge of a North American forest where the trees '
@@ -86,6 +86,24 @@ abstract final class MascotRegistry {
       catchphrase: 'Trust is earned, not given.',
       icon: Icons.psychology,
       imageUrl: 'https://openclipart.org/image/800px/355825',
+    ),
+    Mascot(
+      id: 'bruno_bear',
+      name: 'Bruno',
+      species: 'Brown Bear',
+      regionId: 'romania',
+      personality: 'Careful, thoughtful, and protective',
+      bio:
+          'Bruno lives deep in the Carpathian forests of Romania, where beech '
+          'and spruce trees tower overhead. He is strong but gentle, and has '
+          'learned that even the most beautiful clearings can hide dangers. '
+          'Bruno teaches his forest friends to check carefully before rushing '
+          'toward something that seems too good to be true.',
+      safetyRole:
+          'The Cautious One \u2014 teaches about recognizing hidden dangers beneath attractive offers',
+      catchphrase: 'If it looks too good, check twice!',
+      icon: Icons.forest,
+      imageUrl: 'https://openclipart.org/image/800px/325104',
     ),
   ];
 

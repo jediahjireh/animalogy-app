@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
 
 enum Region {
-  southernAfrica(
-    id: 'southern_africa',
-    name: 'Southern Africa',
+  southAfrica(
+    id: 'south_africa',
+    name: 'South Africa',
     description: 'Home to meerkats, drongos, and the vast Kalahari.',
     icon: Icons.terrain,
   ),
@@ -26,11 +26,18 @@ enum Region {
     description: 'The Amazon, home to capybaras and stealthy anacondas.',
     icon: Icons.forest,
   ),
-  northAmerica(
-    id: 'north_america',
-    name: 'North America',
+  usa(
+    id: 'usa',
+    name: 'United States',
     description: 'Forests of raccoons, owls, and hidden woodland secrets.',
     icon: Icons.park,
+  ),
+  romania(
+    id: 'romania',
+    name: 'Romania',
+    description:
+        'Ancient forests where brown bears roam beneath towering beech and spruce.',
+    icon: Icons.landscape_rounded,
   );
 
   const Region({

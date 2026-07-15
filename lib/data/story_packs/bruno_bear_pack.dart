@@ -3,29 +3,22 @@ import '../../core/constants/age_groups.dart';
 import '../../core/constants/safety_themes.dart';
 import '../../domain/models/story_pack.dart';
 import '../../domain/models/localized_story_content.dart';
-import '../../domain/models/localized_story_page.dart';
-import '../../domain/models/localized_educator_guide.dart';
-import '../../domain/models/localized_discussion_prompt.dart';
-import '../../domain/models/localized_activity.dart';
-import '../../domain/models/localized_comprehension_question.dart';
+import '../../domain/models/story_page.dart';
+import '../../domain/models/educator_guide.dart';
+import '../../domain/models/discussion_prompt.dart';
+import '../../domain/models/activity.dart';
+import '../../domain/models/comprehension_question.dart';
 
 /// Bruno's story pack with Romanian + English support
 final StoryPack brunoBearPack = StoryPack(
   id: 'bruno_hidden_berries',
   mascotId: 'bruno_bear', // Note: mascot needs to be added to mascot_registry
-  regionId: 'carpathian_mountains', // Note: region needs to be added to regions
+  regionId: 'romania',
   safetyTheme: SafetyTheme.hiddenDanger,
-  ageGroups: [
-    AgeGroup.preschool,
-    AgeGroup.earlyPrimary,
-    AgeGroup.latePrimary,
-  ],
+  ageGroups: [AgeGroup.preschool, AgeGroup.earlyPrimary, AgeGroup.latePrimary],
   availableLanguages: ['ro', 'en'],
   defaultLanguage: 'ro',
-  translations: {
-    'ro': _romanianContent,
-    'en': _englishContent,
-  },
+  translations: {'ro': _romanianContent, 'en': _englishContent},
 );
 
 // ============================================================================
@@ -40,7 +33,7 @@ final LocalizedStoryContent _romanianContent = LocalizedStoryContent(
       'nu îl vede. O lecție despre cum lucrurile frumoase pot ascunde pericole '
       'ascunse — la fel ca pe internet.',
   pages: [
-    LocalizedStoryPage(
+    StoryPage(
       pageNumber: 1,
       narration:
           'Bruno ursul brun trăia în pădurea deasă a munților Carpați. '
@@ -56,7 +49,7 @@ final LocalizedStoryContent _romanianContent = LocalizedStoryContent(
       sceneColor: Color(0xFF81C784),
       imageUrl: '', // Could add bear image here
     ),
-    LocalizedStoryPage(
+    StoryPage(
       pageNumber: 2,
       narration:
           'Bruno a urmat mirosul până la o poiană frumoasă. Soarele strălucea, '
@@ -72,7 +65,7 @@ final LocalizedStoryContent _romanianContent = LocalizedStoryContent(
       sceneColor: Color(0xFFAED581),
       imageUrl: '',
     ),
-    LocalizedStoryPage(
+    StoryPage(
       pageNumber: 3,
       narration:
           'Bruno a alergat spre arbuști și a început să mănânce afinele. '
@@ -89,7 +82,7 @@ final LocalizedStoryContent _romanianContent = LocalizedStoryContent(
       sceneColor: Color(0xFFFFCC80),
       imageUrl: '',
     ),
-    LocalizedStoryPage(
+    StoryPage(
       pageNumber: 4,
       narration:
           'Bruno a fugit repede la râul din apropiere și și-a răcorit laba '
@@ -109,7 +102,7 @@ final LocalizedStoryContent _romanianContent = LocalizedStoryContent(
       imageUrl: '',
     ),
   ],
-  educatorGuide: LocalizedEducatorGuide(
+  educatorGuide: EducatorGuide(
     learningObjectives: [
       'Înțelegeți că pericolele se pot ascunde sub lucruri frumoase sau tentante.',
       'Recunoașteți tiparele de atracție folosite în înșelăciunea online.',
@@ -117,14 +110,14 @@ final LocalizedStoryContent _romanianContent = LocalizedStoryContent(
       'Construiți încrederea de a cere ajutor unui adult de încredere.',
     ],
     discussionPrompts: [
-      LocalizedDiscussionPrompt(
+      DiscussionPrompt(
         question: 'De ce nu a văzut Bruno viespile ascunse?',
         guidanceNote:
             'Bruno era atât de entuziasmat de afine încât nu a verificat '
             'cu atenție. Când ceva pare foarte tentant, putem uita să fim precauți.',
         targetAge: AgeGroup.preschool,
       ),
-      LocalizedDiscussionPrompt(
+      DiscussionPrompt(
         question:
             'Cum este poiana cu afine ca și linkurile pe care le vedem online?',
         guidanceNote:
@@ -134,7 +127,7 @@ final LocalizedStoryContent _romanianContent = LocalizedStoryContent(
       ),
     ],
     activities: [
-      LocalizedActivity(
+      Activity(
         title: 'Jocul "Verifică Înainte de Click"',
         description:
             'Creați carduri cu imagini de pe internet — unele sigure, altele '
@@ -162,15 +155,10 @@ final LocalizedStoryContent _romanianContent = LocalizedStoryContent(
         'că este.',
   ),
   questions: [
-    LocalizedComprehensionQuestion(
+    ComprehensionQuestion(
       id: 'q1',
       questionText: 'Ce s-a ascuns sub afinele strălucitoare?',
-      options: [
-        'Mai multe afine',
-        'Un cuib de viespi',
-        'Un râu',
-        'Mama Urs',
-      ],
+      options: ['Mai multe afine', 'Un cuib de viespi', 'Un râu', 'Mama Urs'],
       correctIndex: 1,
       explanation:
           'Sub frunzele verzi ale arbuștilor se ascundea un cuib de viespi '
@@ -178,7 +166,7 @@ final LocalizedStoryContent _romanianContent = LocalizedStoryContent(
       mascotEncouragement:
           'Foarte bine! Pericolele pot fi ascunse chiar și sub lucruri frumoase.',
     ),
-    LocalizedComprehensionQuestion(
+    ComprehensionQuestion(
       id: 'q2',
       questionText: 'Ce i-a învățat Mama Urs pe Bruno?',
       options: [
@@ -209,7 +197,7 @@ final LocalizedStoryContent _englishContent = LocalizedStoryContent(
       'doesn\'t see. A lesson about how beautiful things can hide hidden dangers '
       '— just like online.',
   pages: [
-    LocalizedStoryPage(
+    StoryPage(
       pageNumber: 1,
       narration:
           'Bruno the brown bear lived in the dense forest of the Carpathian '
@@ -225,7 +213,7 @@ final LocalizedStoryContent _englishContent = LocalizedStoryContent(
       sceneColor: Color(0xFF81C784),
       imageUrl: '',
     ),
-    LocalizedStoryPage(
+    StoryPage(
       pageNumber: 2,
       narration:
           'Bruno followed the smell to a beautiful clearing. The sun was '
@@ -242,7 +230,7 @@ final LocalizedStoryContent _englishContent = LocalizedStoryContent(
       sceneColor: Color(0xFFAED581),
       imageUrl: '',
     ),
-    LocalizedStoryPage(
+    StoryPage(
       pageNumber: 3,
       narration:
           'Bruno rushed to the bushes and started eating the berries. They '
@@ -259,7 +247,7 @@ final LocalizedStoryContent _englishContent = LocalizedStoryContent(
       sceneColor: Color(0xFFFFCC80),
       imageUrl: '',
     ),
-    LocalizedStoryPage(
+    StoryPage(
       pageNumber: 4,
       narration:
           'Bruno ran quickly to the nearby stream and cooled his paw in the '
@@ -278,7 +266,7 @@ final LocalizedStoryContent _englishContent = LocalizedStoryContent(
       imageUrl: '',
     ),
   ],
-  educatorGuide: LocalizedEducatorGuide(
+  educatorGuide: EducatorGuide(
     learningObjectives: [
       'Understand that dangers can hide beneath beautiful or tempting things.',
       'Recognize attraction patterns used in online deception.',
@@ -286,14 +274,14 @@ final LocalizedStoryContent _englishContent = LocalizedStoryContent(
       'Build confidence to ask a trusted adult for help.',
     ],
     discussionPrompts: [
-      LocalizedDiscussionPrompt(
+      DiscussionPrompt(
         question: 'Why didn\'t Bruno see the hidden wasps?',
         guidanceNote:
             'Bruno was so excited about the berries he didn\'t check carefully. '
             'When something seems very tempting, we can forget to be cautious.',
         targetAge: AgeGroup.preschool,
       ),
-      LocalizedDiscussionPrompt(
+      DiscussionPrompt(
         question: 'How is the berry clearing like links we see online?',
         guidanceNote:
             'Both can look wonderful on the surface but hide dangers. Flashy '
@@ -302,7 +290,7 @@ final LocalizedStoryContent _englishContent = LocalizedStoryContent(
       ),
     ],
     activities: [
-      LocalizedActivity(
+      Activity(
         title: 'Check Before You Click Game',
         description:
             'Create cards with screenshots from the internet — some safe, '
@@ -329,22 +317,17 @@ final LocalizedStoryContent _englishContent = LocalizedStoryContent(
         'to be true, it probably is.',
   ),
   questions: [
-    LocalizedComprehensionQuestion(
+    ComprehensionQuestion(
       id: 'q1',
       questionText: 'What was hidden under the shiny berries?',
-      options: [
-        'More berries',
-        'A wasp nest',
-        'A stream',
-        'Mother Bear',
-      ],
+      options: ['More berries', 'A wasp nest', 'A stream', 'Mother Bear'],
       correctIndex: 1,
       explanation:
           'Under the green leaves of the bushes was a wasp nest that stung Bruno.',
       mascotEncouragement:
           'Well done! Dangers can be hidden even beneath beautiful things.',
     ),
-    LocalizedComprehensionQuestion(
+    ComprehensionQuestion(
       id: 'q2',
       questionText: 'What did Mother Bear teach Bruno?',
       options: [

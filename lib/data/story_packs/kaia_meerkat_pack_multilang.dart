@@ -3,29 +3,22 @@ import '../../core/constants/age_groups.dart';
 import '../../core/constants/safety_themes.dart';
 import '../../domain/models/story_pack.dart';
 import '../../domain/models/localized_story_content.dart';
-import '../../domain/models/localized_story_page.dart';
-import '../../domain/models/localized_educator_guide.dart';
-import '../../domain/models/localized_discussion_prompt.dart';
-import '../../domain/models/localized_activity.dart';
-import '../../domain/models/localized_comprehension_question.dart';
+import '../../domain/models/story_page.dart';
+import '../../domain/models/educator_guide.dart';
+import '../../domain/models/discussion_prompt.dart';
+import '../../domain/models/activity.dart';
+import '../../domain/models/comprehension_question.dart';
 
 /// Kaia's story pack with multi-language support (English + Afrikaans)
 final StoryPack kaiaMeerkatPackMultilang = StoryPack(
   id: 'kaia_bird_danger',
   mascotId: 'kaia_meerkat',
-  regionId: 'southern_africa',
+  regionId: 'south_africa',
   safetyTheme: SafetyTheme.onlineDeception,
-  ageGroups: [
-    AgeGroup.preschool,
-    AgeGroup.earlyPrimary,
-    AgeGroup.latePrimary,
-  ],
+  ageGroups: [AgeGroup.preschool, AgeGroup.earlyPrimary, AgeGroup.latePrimary],
   availableLanguages: ['en', 'af'],
   defaultLanguage: 'en',
-  translations: {
-    'en': _englishContent,
-    'af': _afrikaansContent,
-  },
+  translations: {'en': _englishContent, 'af': _afrikaansContent},
 );
 
 // ============================================================================
@@ -40,7 +33,7 @@ final LocalizedStoryContent _englishContent = LocalizedStoryContent(
       'who sounds helpful is telling the truth — a lesson about recognising '
       'deception online and in everyday life.',
   pages: [
-    LocalizedStoryPage(
+    StoryPage(
       pageNumber: 1,
       narration:
           'Kaia loved lunchtime more than anything. She and her friends '
@@ -56,7 +49,7 @@ final LocalizedStoryContent _englishContent = LocalizedStoryContent(
       sceneColor: Color(0xFFFFECB3),
       imageUrl: 'https://openclipart.org/image/800px/355165',
     ),
-    LocalizedStoryPage(
+    StoryPage(
       pageNumber: 2,
       narration:
           'One day, a sleek black bird swooped down from the sky. '
@@ -73,7 +66,7 @@ final LocalizedStoryContent _englishContent = LocalizedStoryContent(
       sceneColor: Color(0xFFFFE0B2),
       imageUrl: 'https://openclipart.org/image/800px/355412',
     ),
-    LocalizedStoryPage(
+    StoryPage(
       pageNumber: 3,
       narration:
           'The drongo bird visited every day after that, always watching '
@@ -89,7 +82,7 @@ final LocalizedStoryContent _englishContent = LocalizedStoryContent(
       sceneColor: Color(0xFFC8E6C9),
       imageUrl: 'https://openclipart.org/image/800px/355814',
     ),
-    LocalizedStoryPage(
+    StoryPage(
       pageNumber: 4,
       narration:
           'Then one sunny lunchtime, just as the meerkats found the '
@@ -106,7 +99,7 @@ final LocalizedStoryContent _englishContent = LocalizedStoryContent(
       sceneColor: Color(0xFFFFF9C4),
       imageUrl: 'https://openclipart.org/image/800px/355961',
     ),
-    LocalizedStoryPage(
+    StoryPage(
       pageNumber: 5,
       narration:
           'When the meerkats crept back out, every last grub was gone. '
@@ -122,7 +115,7 @@ final LocalizedStoryContent _englishContent = LocalizedStoryContent(
       sceneColor: Color(0xFFFFCDD2),
       imageUrl: 'https://openclipart.org/image/800px/355131',
     ),
-    LocalizedStoryPage(
+    StoryPage(
       pageNumber: 6,
       narration:
           'Kaia felt a heavy sadness in her chest. Mama Meerkat nuzzled '
@@ -138,7 +131,7 @@ final LocalizedStoryContent _englishContent = LocalizedStoryContent(
       sceneColor: Color(0xFFBBDEFB),
       imageUrl: 'https://openclipart.org/image/800px/355165',
     ),
-    LocalizedStoryPage(
+    StoryPage(
       pageNumber: 7,
       narration:
           'Kaia decided she would learn to check for danger herself. '
@@ -155,7 +148,7 @@ final LocalizedStoryContent _englishContent = LocalizedStoryContent(
       sceneColor: Color(0xFFB2DFDB),
       imageUrl: 'https://openclipart.org/image/800px/355184',
     ),
-    LocalizedStoryPage(
+    StoryPage(
       pageNumber: 8,
       narration:
           'From that day on, Kaia always looked twice and asked questions '
@@ -172,7 +165,7 @@ final LocalizedStoryContent _englishContent = LocalizedStoryContent(
       imageUrl: 'https://openclipart.org/image/800px/355165',
     ),
   ],
-  educatorGuide: LocalizedEducatorGuide(
+  educatorGuide: EducatorGuide(
     learningObjectives: [
       'Understand that people online may pretend to be helpful in order '
           'to deceive or take advantage of others.',
@@ -184,7 +177,7 @@ final LocalizedStoryContent _englishContent = LocalizedStoryContent(
           'when something online feels wrong.',
     ],
     discussionPrompts: [
-      LocalizedDiscussionPrompt(
+      DiscussionPrompt(
         question:
             'The drongo bird seemed really nice at first. Can you think of '
             'a time someone seemed nice but was not being honest?',
@@ -194,7 +187,7 @@ final LocalizedStoryContent _englishContent = LocalizedStoryContent(
             'that checking is smart, not that everyone is bad.',
         targetAge: AgeGroup.preschool,
       ),
-      LocalizedDiscussionPrompt(
+      DiscussionPrompt(
         question:
             'Why did Kaia and her friends believe the drongo so quickly '
             'every time it called danger?',
@@ -207,7 +200,7 @@ final LocalizedStoryContent _englishContent = LocalizedStoryContent(
       ),
     ],
     activities: [
-      LocalizedActivity(
+      Activity(
         title: 'True or Tricky Sorting Game',
         description:
             'Prepare cards with simple statements — some true, some tricky '
@@ -236,7 +229,7 @@ final LocalizedStoryContent _englishContent = LocalizedStoryContent(
         'builds trust first, then exploits it.',
   ),
   questions: [
-    LocalizedComprehensionQuestion(
+    ComprehensionQuestion(
       id: 'q1',
       questionText: 'Why did the drongo bird call "Danger!" the first time?',
       options: [
@@ -252,7 +245,7 @@ final LocalizedStoryContent _englishContent = LocalizedStoryContent(
       mascotEncouragement:
           'Great thinking! The drongo wasn\'t being honest from the start.',
     ),
-    LocalizedComprehensionQuestion(
+    ComprehensionQuestion(
       id: 'q2',
       questionText: 'What did Kaia do differently after she learned the truth?',
       options: [
@@ -284,7 +277,7 @@ final LocalizedStoryContent _afrikaansContent = LocalizedStoryContent(
       'wat hulpvaardig klink die waarheid praat nie — \'n les oor bedrog '
       'aanlyn en in die daaglikse lewe.',
   pages: [
-    LocalizedStoryPage(
+    StoryPage(
       pageNumber: 1,
       narration:
           'Kaia was mal oor etetyd. Sy en haar vriende het onder die warm '
@@ -300,7 +293,7 @@ final LocalizedStoryContent _afrikaansContent = LocalizedStoryContent(
       sceneColor: Color(0xFFFFECB3),
       imageUrl: 'https://openclipart.org/image/800px/355165',
     ),
-    LocalizedStoryPage(
+    StoryPage(
       pageNumber: 2,
       narration:
           'Eendag het \'n gladde swart voël van die lug afgeskiet. '
@@ -317,7 +310,7 @@ final LocalizedStoryContent _afrikaansContent = LocalizedStoryContent(
       sceneColor: Color(0xFFFFE0B2),
       imageUrl: 'https://openclipart.org/image/800px/355412',
     ),
-    LocalizedStoryPage(
+    StoryPage(
       pageNumber: 3,
       narration:
           'Die drongo-voël het elke dag daarna kom kuier, altyd wakker '
@@ -333,7 +326,7 @@ final LocalizedStoryContent _afrikaansContent = LocalizedStoryContent(
       sceneColor: Color(0xFFC8E6C9),
       imageUrl: 'https://openclipart.org/image/800px/355814',
     ),
-    LocalizedStoryPage(
+    StoryPage(
       pageNumber: 4,
       narration:
           'Toe, een sonnige etetyd, net toe die meerkatte die lekkerste '
@@ -351,7 +344,7 @@ final LocalizedStoryContent _afrikaansContent = LocalizedStoryContent(
       sceneColor: Color(0xFFFFF9C4),
       imageUrl: 'https://openclipart.org/image/800px/355961',
     ),
-    LocalizedStoryPage(
+    StoryPage(
       pageNumber: 5,
       narration:
           'Toe die meerkatte versigtig terugkom, was elke wurm weg. '
@@ -367,7 +360,7 @@ final LocalizedStoryContent _afrikaansContent = LocalizedStoryContent(
       sceneColor: Color(0xFFFFCDD2),
       imageUrl: 'https://openclipart.org/image/800px/355131',
     ),
-    LocalizedStoryPage(
+    StoryPage(
       pageNumber: 6,
       narration:
           'Kaia het \'n swaar hartseer in haar bors gevoel. Mama Meerkat '
@@ -384,7 +377,7 @@ final LocalizedStoryContent _afrikaansContent = LocalizedStoryContent(
       sceneColor: Color(0xFFBBDEFB),
       imageUrl: 'https://openclipart.org/image/800px/355165',
     ),
-    LocalizedStoryPage(
+    StoryPage(
       pageNumber: 7,
       narration:
           'Kaia het besluit sy sal self leer kyk vir gevaar. Die volgende '
@@ -402,7 +395,7 @@ final LocalizedStoryContent _afrikaansContent = LocalizedStoryContent(
       sceneColor: Color(0xFFB2DFDB),
       imageUrl: 'https://openclipart.org/image/800px/355184',
     ),
-    LocalizedStoryPage(
+    StoryPage(
       pageNumber: 8,
       narration:
           'Van daardie dag af het Kaia altyd twee keer gekyk en vrae '
@@ -419,7 +412,7 @@ final LocalizedStoryContent _afrikaansContent = LocalizedStoryContent(
       imageUrl: 'https://openclipart.org/image/800px/355165',
     ),
   ],
-  educatorGuide: LocalizedEducatorGuide(
+  educatorGuide: EducatorGuide(
     learningObjectives: [
       'Verstaan dat mense aanlyn kan voorgee om hulpvaardig te wees om '
           'ander te mislei of te benut.',
@@ -431,7 +424,7 @@ final LocalizedStoryContent _afrikaansContent = LocalizedStoryContent(
           'volwassene te soek wanneer iets aanlyn verkeerd voel.',
     ],
     discussionPrompts: [
-      LocalizedDiscussionPrompt(
+      DiscussionPrompt(
         question:
             'Die drongo-voël het aan die begin baie mooi gelyk. Kan jy dink '
             'aan \'n tyd toe iemand mooi gelyk het maar nie eerlik was nie?',
@@ -441,7 +434,7 @@ final LocalizedStoryContent _afrikaansContent = LocalizedStoryContent(
             'dat kontroleer slim is, nie dat almal sleg is nie.',
         targetAge: AgeGroup.preschool,
       ),
-      LocalizedDiscussionPrompt(
+      DiscussionPrompt(
         question:
             'Hoekom het Kaia en haar vriende die drongo so vinnig geglo '
             'elke keer as dit gevaar geroep het?',
@@ -453,7 +446,7 @@ final LocalizedStoryContent _afrikaansContent = LocalizedStoryContent(
       ),
     ],
     activities: [
-      LocalizedActivity(
+      Activity(
         title: 'Waar of Gevaarlik Sorteerspel',
         description:
             'Maak kaarte met eenvoudige stellings — party waar, party misleidend. '
@@ -481,9 +474,10 @@ final LocalizedStoryContent _afrikaansContent = LocalizedStoryContent(
         'vertrou. Bedrog bou dikwels eers vertroue, dan buit dit dit uit.',
   ),
   questions: [
-    LocalizedComprehensionQuestion(
+    ComprehensionQuestion(
       id: 'q1',
-      questionText: 'Hoekom het die drongo-voël die eerste keer "Gevaar!" geroep?',
+      questionText:
+          'Hoekom het die drongo-voël die eerste keer "Gevaar!" geroep?',
       options: [
         'Om die meerkatte te help',
         'Om hul kos te steel',
@@ -497,9 +491,10 @@ final LocalizedStoryContent _afrikaansContent = LocalizedStoryContent(
       mascotEncouragement:
           'Goeie denkwerk! Die drongo was nie van die begin af eerlik nie.',
     ),
-    LocalizedComprehensionQuestion(
+    ComprehensionQuestion(
       id: 'q2',
-      questionText: 'Wat het Kaia anders gedoen nadat sy die waarheid geleer het?',
+      questionText:
+          'Wat het Kaia anders gedoen nadat sy die waarheid geleer het?',
       options: [
         'Sy het opgehou eet',
         'Sy het na \'n nuwe gat getrek',

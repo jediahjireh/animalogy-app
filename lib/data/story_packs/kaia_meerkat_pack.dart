@@ -13,7 +13,7 @@ final List<StoryPack> kaiaMeerkatPacks = [
     id: 'kaia_bird_danger',
     title: 'Kaia and the Bird Who Cried Danger',
     mascotId: 'kaia_meerkat',
-    regionId: 'southern_africa',
+    regionId: 'south_africa',
     safetyTheme: SafetyTheme.onlineDeception,
     ageGroups: [
       AgeGroup.preschool,

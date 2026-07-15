@@ -1,4 +1,5 @@
 import '../../domain/models/story_pack.dart';
+import 'bruno_bear_pack.dart';
 import 'kaia_meerkat_pack_multilang.dart';
 import 'daisy_dingo_pack.dart';
 import 'tara_turtle_pack.dart';
@@ -14,6 +15,7 @@ class StoryPackRegistry {
     ...taraTurtlePacks,
     ...lumaCapybaraPacks,
     ...rickyRaccoonPacks,
+    brunoBearPack,
   ];
 
   static final Map<String, StoryPack> _byId = {

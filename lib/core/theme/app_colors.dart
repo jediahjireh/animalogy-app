@@ -29,11 +29,12 @@ abstract final class AnimalColors {
   static const Color textOnPrimary = Color(0xFFFFFFFF);
 
   // Vibrant region colors for cultural differentiation
-  static const Color regionAfrica = Color(0xFFE85D1A);
+  static const Color regionSouthAfrica = Color(0xFFE85D1A);
   static const Color regionAustralia = Color(0xFFD4570A);
   static const Color regionIndia = Color(0xFFC68A00);
   static const Color regionBrazil = Color(0xFF1B8C3D);
-  static const Color regionNorthAmerica = Color(0xFF6D4C2E);
+  static const Color regionUsa = Color(0xFF6D4C2E);
+  static const Color regionRomania = Color(0xFF3D7043);
 
   // Cartoon UI borders
   static const Color border = Color(0xFFCDBBA8);
@@ -51,11 +52,12 @@ abstract final class AnimalColors {
 
   static Color regionColor(String regionId) {
     return switch (regionId) {
-      'southern_africa' => regionAfrica,
+      'south_africa' => regionSouthAfrica,
       'australia' => regionAustralia,
       'india' => regionIndia,
       'brazil' => regionBrazil,
-      'north_america' => regionNorthAmerica,
+      'usa' => regionUsa,
+      'romania' => regionRomania,
       _ => primary,
     };
   }

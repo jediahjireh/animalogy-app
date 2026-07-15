@@ -13,7 +13,7 @@ final List<StoryPack> rickyRaccoonPacks = [
     id: 'ricky_owl_lied',
     title: 'Ricky and the Owl That Lied',
     mascotId: 'ricky_raccoon',
-    regionId: 'north_america',
+    regionId: 'usa',
     safetyTheme: SafetyTheme.betrayalOfTrust,
     ageGroups: AgeGroup.values.toList(),
     synopsis:
