@@ -10,7 +10,10 @@ class PdfGenerator {
   static const _smallFontSize = 10.0;
   static const _captionFontSize = 9.0;
 
-  static pw.Document generateStoryPrintout(StoryPack pack) {
+  static pw.Document generateStoryPrintout(
+    StoryPack pack, [
+    String? languageCode,
+  ]) {
     final pdf = pw.Document();
     final titleStyle = pw.TextStyle(
       fontSize: _headerFontSize,
@@ -33,7 +36,7 @@ class PdfGenerator {
             pw.SizedBox(height: 80),
             pw.Center(
               child: pw.Text(
-                pack.title,
+                pack.titleIn(languageCode),
                 style: pw.TextStyle(
                   fontSize: 28,
                   fontWeight: pw.FontWeight.bold,
@@ -76,7 +79,7 @@ class PdfGenerator {
                     ),
                   ),
                   pw.SizedBox(height: 8),
-                  pw.Text(pack.synopsis, style: bodyStyle),
+                  pw.Text(pack.synopsisIn(languageCode), style: bodyStyle),
                 ],
               ),
             ),
@@ -93,19 +96,27 @@ class PdfGenerator {
     );
 
     // Story pages (2 per PDF page)
-    for (var i = 0; i < pack.pages.length; i += 2) {
+    for (var i = 0; i < pack.pagesIn(languageCode).length; i += 2) {
       pdf.addPage(
         pw.Page(
           margin: const pw.EdgeInsets.all(_pageMargin),
           build: (context) => pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
-              _buildStoryPageBlock(pack.pages[i], titleStyle, bodyStyle),
-              if (i + 1 < pack.pages.length) ...[
+              _buildStoryPageBlock(
+                pack.pagesIn(languageCode)[i],
+                titleStyle,
+                bodyStyle,
+              ),
+              if (i + 1 < pack.pagesIn(languageCode).length) ...[
                 pw.SizedBox(height: 24),
                 pw.Divider(color: PdfColors.grey300),
                 pw.SizedBox(height: 24),
-                _buildStoryPageBlock(pack.pages[i + 1], titleStyle, bodyStyle),
+                _buildStoryPageBlock(
+                  pack.pagesIn(languageCode)[i + 1],
+                  titleStyle,
+                  bodyStyle,
+                ),
               ],
             ],
           ),
@@ -130,7 +141,7 @@ class PdfGenerator {
                 borderRadius: pw.BorderRadius.circular(8),
               ),
               child: pw.Text(
-                pack.educatorGuide.safetyTakeaway,
+                pack.educatorGuideIn(languageCode).safetyTakeaway,
                 style: pw.TextStyle(
                   fontSize: 14,
                   fontWeight: pw.FontWeight.bold,
@@ -141,7 +152,10 @@ class PdfGenerator {
             pw.SizedBox(height: 32),
             pw.Text('Cultural Context', style: titleStyle),
             pw.SizedBox(height: 12),
-            pw.Text(pack.educatorGuide.culturalContext, style: bodyStyle),
+            pw.Text(
+              pack.educatorGuideIn(languageCode).culturalContext,
+              style: bodyStyle,
+            ),
           ],
         ),
       ),
@@ -202,9 +216,12 @@ class PdfGenerator {
     );
   }
 
-  static pw.Document generateActivitySheet(StoryPack pack) {
+  static pw.Document generateActivitySheet(
+    StoryPack pack, [
+    String? languageCode,
+  ]) {
     final pdf = pw.Document();
-    final guide = pack.educatorGuide;
+    final guide = pack.educatorGuideIn(languageCode);
 
     pdf.addPage(
       pw.MultiPage(
@@ -213,7 +230,7 @@ class PdfGenerator {
           crossAxisAlignment: pw.CrossAxisAlignment.start,
           children: [
             pw.Text(
-              'Activity Sheet: ${pack.title}',
+              'Activity Sheet: ${pack.titleIn(languageCode)}',
               style: pw.TextStyle(
                 fontSize: _headerFontSize,
                 fontWeight: pw.FontWeight.bold,
@@ -367,9 +384,12 @@ class PdfGenerator {
     return pdf;
   }
 
-  static pw.Document generateDiscussionCards(StoryPack pack) {
+  static pw.Document generateDiscussionCards(
+    StoryPack pack, [
+    String? languageCode,
+  ]) {
     final pdf = pw.Document();
-    final prompts = pack.educatorGuide.discussionPrompts;
+    final prompts = pack.educatorGuideIn(languageCode).discussionPrompts;
 
     // 4 cards per page in a 2x2 grid
     for (var i = 0; i < prompts.length; i += 4) {
@@ -381,7 +401,7 @@ class PdfGenerator {
           build: (context) => pw.Column(
             children: [
               pw.Text(
-                'Discussion Cards: ${pack.title}',
+                'Discussion Cards: ${pack.titleIn(languageCode)}',
                 style: pw.TextStyle(
                   fontSize: _subHeaderFontSize,
                   fontWeight: pw.FontWeight.bold,
@@ -480,9 +500,9 @@ class PdfGenerator {
     return pdf;
   }
 
-  static pw.Document generateQuizSheet(StoryPack pack) {
+  static pw.Document generateQuizSheet(StoryPack pack, [String? languageCode]) {
     final pdf = pw.Document();
-    final questions = pack.questions;
+    final questions = pack.questionsIn(languageCode);
     if (questions.isEmpty) return pdf;
 
     final labels = ['A', 'B', 'C', 'D'];
@@ -495,7 +515,7 @@ class PdfGenerator {
           crossAxisAlignment: pw.CrossAxisAlignment.start,
           children: [
             pw.Text(
-              'Comprehension Quiz: ${pack.title}',
+              'Comprehension Quiz: ${pack.titleIn(languageCode)}',
               style: pw.TextStyle(
                 fontSize: _headerFontSize,
                 fontWeight: pw.FontWeight.bold,
@@ -611,7 +631,7 @@ class PdfGenerator {
             ),
             pw.SizedBox(height: 4),
             pw.Text(
-              pack.title,
+              pack.titleIn(languageCode),
               style: pw.TextStyle(
                 fontSize: _smallFontSize,
                 fontStyle: pw.FontStyle.italic,

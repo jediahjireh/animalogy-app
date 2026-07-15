@@ -59,11 +59,12 @@ class _QuestionPageViewState extends State<QuestionPageView> {
                         child: Image.network(
                           widget.mascotImageUrl,
                           fit: BoxFit.contain,
-                          errorBuilder: (context, error, stackTrace) => const Icon(
-                            Icons.pets,
-                            color: AnimalColors.primary,
-                            size: 22,
-                          ),
+                          errorBuilder: (context, error, stackTrace) =>
+                              const Icon(
+                                Icons.pets,
+                                color: AnimalColors.primary,
+                                size: 22,
+                              ),
                         ),
                       )
                     : const Icon(

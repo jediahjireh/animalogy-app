@@ -57,36 +57,42 @@ class _StoryCompleteOverlayState extends State<StoryCompleteOverlay> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 (widget.mascotImageUrl.isNotEmpty
-                    ? Container(
-                        width: Dimensions.mascotAvatarLg,
-                        height: Dimensions.mascotAvatarLg,
-                        decoration: BoxDecoration(
-                          color: AnimalColors.accent.withValues(alpha: 0.15),
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: AnimalColors.accent.withValues(alpha: 0.4),
-                            width: Dimensions.borderThick,
-                          ),
-                        ),
-                        clipBehavior: Clip.antiAlias,
-                        child: Padding(
-                          padding: const EdgeInsets.all(12),
-                          child: Image.network(
-                            widget.mascotImageUrl,
-                            fit: BoxFit.contain,
-                            errorBuilder: (context, error, stackTrace) => const Icon(
-                              Icons.auto_awesome,
-                              size: Dimensions.iconXxl,
-                              color: AnimalColors.accent,
+                        ? Container(
+                            width: Dimensions.mascotAvatarLg,
+                            height: Dimensions.mascotAvatarLg,
+                            decoration: BoxDecoration(
+                              color: AnimalColors.accent.withValues(
+                                alpha: 0.15,
+                              ),
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: AnimalColors.accent.withValues(
+                                  alpha: 0.4,
+                                ),
+                                width: Dimensions.borderThick,
+                              ),
                             ),
-                          ),
-                        ),
-                      )
-                    : const Icon(
-                        Icons.auto_awesome,
-                        size: Dimensions.iconXxl,
-                        color: AnimalColors.accent,
-                      ) as Widget)
+                            clipBehavior: Clip.antiAlias,
+                            child: Padding(
+                              padding: const EdgeInsets.all(12),
+                              child: Image.network(
+                                widget.mascotImageUrl,
+                                fit: BoxFit.contain,
+                                errorBuilder: (context, error, stackTrace) =>
+                                    const Icon(
+                                      Icons.auto_awesome,
+                                      size: Dimensions.iconXxl,
+                                      color: AnimalColors.accent,
+                                    ),
+                              ),
+                            ),
+                          )
+                        : const Icon(
+                                Icons.auto_awesome,
+                                size: Dimensions.iconXxl,
+                                color: AnimalColors.accent,
+                              )
+                              as Widget)
                     .animate()
                     .scale(
                       begin: const Offset(0.5, 0.5),

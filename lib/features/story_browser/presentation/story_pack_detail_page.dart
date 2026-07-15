@@ -44,7 +44,8 @@ class StoryPackDetailPage extends ConsumerWidget {
     final packProgress = progress[packId];
     final scores = ref.watch(storyScoresProvider);
     final score = scores[packId];
-    final selectedLanguage = ref.watch(packLanguageForIdProvider(packId)) ?? pack.defaultLanguage;
+    final selectedLanguage =
+        ref.watch(packLanguageForIdProvider(packId)) ?? pack.defaultLanguage;
 
     final regionColor = region?.color ?? AnimalColors.primary;
 
@@ -106,16 +107,21 @@ class StoryPackDetailPage extends ConsumerWidget {
                           ? Image.network(
                               mascot.imageUrl,
                               fit: BoxFit.contain,
-                              errorBuilder: (context, error, stackTrace) => Icon(
-                                mascot.icon,
-                                size: 32,
-                                color: pack.safetyTheme.color.withValues(alpha: 0.6),
-                              ),
+                              errorBuilder: (context, error, stackTrace) =>
+                                  Icon(
+                                    mascot.icon,
+                                    size: 32,
+                                    color: pack.safetyTheme.color.withValues(
+                                      alpha: 0.6,
+                                    ),
+                                  ),
                             )
                           : Icon(
                               mascot.icon,
                               size: 32,
-                              color: pack.safetyTheme.color.withValues(alpha: 0.6),
+                              color: pack.safetyTheme.color.withValues(
+                                alpha: 0.6,
+                              ),
                             ),
                     ),
                   ),
@@ -124,7 +130,7 @@ class StoryPackDetailPage extends ConsumerWidget {
             ),
             const SizedBox(height: Dimensions.lg),
             Text(
-              pack.title,
+              pack.titleIn(selectedLanguage),
               style: Theme.of(
                 context,
               ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w800),
@@ -217,11 +223,14 @@ class StoryPackDetailPage extends ConsumerWidget {
                             padding: const EdgeInsets.only(right: 6),
                             child: ChoiceChip(
                               label: Text(
-                                '${_languageFlags[langCode] ?? ''} ${_languageNames[langCode] ?? langCode}'.trim(),
+                                '${_languageFlags[langCode] ?? ''} ${_languageNames[langCode] ?? langCode}'
+                                    .trim(),
                               ),
                               selected: isSelected,
                               onSelected: (_) {
-                                ref.read(packLanguageProvider.notifier).setLanguage(packId, langCode);
+                                ref
+                                    .read(packLanguageProvider.notifier)
+                                    .setLanguage(packId, langCode);
                               },
                               selectedColor: regionColor.withValues(alpha: 0.2),
                               backgroundColor: AnimalColors.surface,
@@ -233,7 +242,9 @@ class StoryPackDetailPage extends ConsumerWidget {
                               ),
                               labelStyle: TextStyle(
                                 fontSize: 13,
-                                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                                fontWeight: isSelected
+                                    ? FontWeight.w600
+                                    : FontWeight.w500,
                                 color: isSelected
                                     ? regionColor
                                     : AnimalColors.textSecondary,
@@ -268,7 +279,7 @@ class StoryPackDetailPage extends ConsumerWidget {
             ],
             const SizedBox(height: Dimensions.lg),
             Text(
-              pack.synopsis,
+              pack.synopsisIn(selectedLanguage),
               style: Theme.of(
                 context,
               ).textTheme.bodyLarge?.copyWith(height: 1.5),
@@ -296,7 +307,7 @@ class StoryPackDetailPage extends ConsumerWidget {
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        'Page ${packProgress.lastPageRead + 1} of ${pack.pages.length}',
+                        'Page ${packProgress.lastPageRead + 1} of ${pack.pagesIn(selectedLanguage).length}',
                         style: Theme.of(context).textTheme.labelLarge?.copyWith(
                           color: AnimalColors.primary,
                         ),
@@ -370,7 +381,8 @@ class StoryPackDetailPage extends ConsumerWidget {
               CartoonButton(
                 label: 'Printable Resources',
                 icon: Icons.print_rounded,
-                onPressed: () => PrintOptionsSheet.show(context, pack),
+                onPressed: () =>
+                    PrintOptionsSheet.show(context, pack, selectedLanguage),
                 color: AnimalColors.info,
                 expanded: true,
               ),
@@ -384,28 +396,31 @@ class StoryPackDetailPage extends ConsumerWidget {
                 ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
               ),
               const SizedBox(height: Dimensions.sm),
-              ...pack.educatorGuide.learningObjectives.map(
-                (obj) => Padding(
-                  padding: const EdgeInsets.only(bottom: 6),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Icon(
-                        Icons.check_circle_outline_rounded,
-                        size: 18,
-                        color: AnimalColors.secondary,
+              ...pack
+                  .educatorGuideIn(selectedLanguage)
+                  .learningObjectives
+                  .map(
+                    (obj) => Padding(
+                      padding: const EdgeInsets.only(bottom: 6),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Icon(
+                            Icons.check_circle_outline_rounded,
+                            size: 18,
+                            color: AnimalColors.secondary,
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              obj,
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                          ),
+                        ],
                       ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          obj,
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
-              ),
             ],
           ],
         ),

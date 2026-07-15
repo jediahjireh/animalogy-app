@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/constants/regions.dart';
 import '../../../core/providers/app_mode_provider.dart';
+import '../../../core/providers/language_provider.dart';
 import '../../../core/providers/region_provider.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_dimensions.dart';
@@ -133,8 +134,12 @@ class HomePage extends ConsumerWidget {
                       const SizedBox(height: Dimensions.sm),
                       ...inProgressPack.map((entry) {
                         final pack = StoryPackRegistry.getById(entry.key);
+                        final lang = ref.watch(
+                          packLanguageForIdProvider(pack.id),
+                        );
                         final fraction =
-                            (entry.value.lastPageRead + 1) / pack.pages.length;
+                            (entry.value.lastPageRead + 1) /
+                            pack.pagesIn(lang).length;
                         return Padding(
                           padding: const EdgeInsets.only(bottom: Dimensions.sm),
                           child: CartoonCard(
@@ -168,7 +173,7 @@ class HomePage extends ConsumerWidget {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        pack.title,
+                                        pack.titleIn(lang),
                                         style: Theme.of(context)
                                             .textTheme
                                             .titleMedium
@@ -341,6 +346,7 @@ class HomePage extends ConsumerWidget {
                 delegate: SliverChildBuilderDelegate((context, index) {
                   final pack = regionPacks[index];
                   final score = scores[pack.id];
+                  final lang = ref.watch(packLanguageForIdProvider(pack.id));
                   return CartoonCard(
                     borderColor: pack.safetyTheme.color,
                     rotate: true,
@@ -376,7 +382,7 @@ class HomePage extends ConsumerWidget {
                         ),
                         const SizedBox(height: Dimensions.sm),
                         Text(
-                          pack.title,
+                          pack.titleIn(lang),
                           style: Theme.of(context).textTheme.labelLarge
                               ?.copyWith(fontWeight: FontWeight.w700),
                           maxLines: 2,

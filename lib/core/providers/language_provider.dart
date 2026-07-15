@@ -43,12 +43,15 @@ class PackLanguageNotifier extends StateNotifier<Map<String, String>> {
 /// Provider for pack language selections
 final packLanguageProvider =
     StateNotifierProvider<PackLanguageNotifier, Map<String, String>>((ref) {
-  final prefsService = ref.watch(preferencesServiceProvider);
-  return PackLanguageNotifier(prefsService);
-});
+      final prefsService = ref.watch(preferencesServiceProvider);
+      return PackLanguageNotifier(prefsService);
+    });
 
 /// Convenience provider to get language for a specific pack
-final packLanguageForIdProvider = Provider.family<String?, String>((ref, packId) {
+final packLanguageForIdProvider = Provider.family<String?, String>((
+  ref,
+  packId,
+) {
   final languages = ref.watch(packLanguageProvider);
   return languages[packId];
 });

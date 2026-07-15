@@ -8,10 +8,15 @@ import 'cartoon_button.dart';
 
 class PrintOptionsSheet extends StatelessWidget {
   final StoryPack pack;
+  final String? languageCode;
 
-  const PrintOptionsSheet({super.key, required this.pack});
+  const PrintOptionsSheet({super.key, required this.pack, this.languageCode});
 
-  static void show(BuildContext context, StoryPack pack) {
+  static void show(
+    BuildContext context,
+    StoryPack pack, [
+    String? languageCode,
+  ]) {
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
@@ -19,7 +24,7 @@ class PrintOptionsSheet extends StatelessWidget {
           top: Radius.circular(Dimensions.radiusXl),
         ),
       ),
-      builder: (_) => PrintOptionsSheet(pack: pack),
+      builder: (_) => PrintOptionsSheet(pack: pack, languageCode: languageCode),
     );
   }
 
@@ -52,7 +57,7 @@ class PrintOptionsSheet extends StatelessWidget {
             ),
             const SizedBox(height: Dimensions.xs),
             Text(
-              pack.title,
+              pack.titleIn(languageCode),
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: AnimalColors.textTertiary,
               ),
@@ -82,7 +87,7 @@ class PrintOptionsSheet extends StatelessWidget {
               color: AnimalColors.secondary,
               onTap: () => _printDiscussionCards(context),
             ),
-            if (pack.questions.isNotEmpty) ...[
+            if (pack.questionsIn(languageCode).isNotEmpty) ...[
               const SizedBox(height: Dimensions.sm),
               _PrintOption(
                 icon: Icons.quiz_rounded,
@@ -101,37 +106,37 @@ class PrintOptionsSheet extends StatelessWidget {
 
   Future<void> _printStory(BuildContext context) async {
     Navigator.pop(context);
-    final pdf = PdfGenerator.generateStoryPrintout(pack);
+    final pdf = PdfGenerator.generateStoryPrintout(pack, languageCode);
     await Printing.layoutPdf(
       onLayout: (_) => pdf.save(),
-      name: '${pack.title} - Story',
+      name: '${pack.titleIn(languageCode)} - Story',
     );
   }
 
   Future<void> _printActivities(BuildContext context) async {
     Navigator.pop(context);
-    final pdf = PdfGenerator.generateActivitySheet(pack);
+    final pdf = PdfGenerator.generateActivitySheet(pack, languageCode);
     await Printing.layoutPdf(
       onLayout: (_) => pdf.save(),
-      name: '${pack.title} - Activities',
+      name: '${pack.titleIn(languageCode)} - Activities',
     );
   }
 
   Future<void> _printDiscussionCards(BuildContext context) async {
     Navigator.pop(context);
-    final pdf = PdfGenerator.generateDiscussionCards(pack);
+    final pdf = PdfGenerator.generateDiscussionCards(pack, languageCode);
     await Printing.layoutPdf(
       onLayout: (_) => pdf.save(),
-      name: '${pack.title} - Discussion Cards',
+      name: '${pack.titleIn(languageCode)} - Discussion Cards',
     );
   }
 
   Future<void> _printQuiz(BuildContext context) async {
     Navigator.pop(context);
-    final pdf = PdfGenerator.generateQuizSheet(pack);
+    final pdf = PdfGenerator.generateQuizSheet(pack, languageCode);
     await Printing.layoutPdf(
       onLayout: (_) => pdf.save(),
-      name: '${pack.title} - Quiz',
+      name: '${pack.titleIn(languageCode)} - Quiz',
     );
   }
 }

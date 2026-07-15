@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../core/providers/language_provider.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_dimensions.dart';
 import '../../../data/story_packs/story_pack_registry.dart';
@@ -93,11 +94,13 @@ class MyLibraryPage extends ConsumerWidget {
               itemBuilder: (context, index) {
                 final packId = allEntries.elementAt(index);
                 final pack = StoryPackRegistry.getById(packId);
+                final lang = ref.watch(packLanguageForIdProvider(packId));
                 final packProgress = progress[packId];
                 final score = scores[packId];
                 final isBookmarked = bookmarks.contains(packId);
                 final progressFraction = packProgress != null
-                    ? (packProgress.lastPageRead + 1) / pack.pages.length
+                    ? (packProgress.lastPageRead + 1) /
+                          pack.pagesIn(lang).length
                     : 0.0;
 
                 return CartoonCard(
@@ -139,7 +142,7 @@ class MyLibraryPage extends ConsumerWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              pack.title,
+                              pack.titleIn(lang),
                               style: Theme.of(context).textTheme.titleSmall
                                   ?.copyWith(fontWeight: FontWeight.w700),
                               maxLines: 1,
@@ -178,7 +181,7 @@ class MyLibraryPage extends ConsumerWidget {
                             ] else if (packProgress != null &&
                                 packProgress.lastPageRead > 0) ...[
                               Text(
-                                'Page ${packProgress.lastPageRead + 1} of ${pack.pages.length}',
+                                'Page ${packProgress.lastPageRead + 1} of ${pack.pagesIn(lang).length}',
                                 style: Theme.of(context).textTheme.bodySmall,
                               ),
                               const SizedBox(height: Dimensions.xs),

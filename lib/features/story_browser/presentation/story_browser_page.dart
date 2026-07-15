@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/constants/age_groups.dart';
 import '../../../core/constants/regions.dart';
 import '../../../core/constants/safety_themes.dart';
+import '../../../core/providers/language_provider.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_dimensions.dart';
 import '../../../shared/widgets/badge_chip.dart';
@@ -120,6 +121,9 @@ class StoryBrowserPage extends ConsumerWidget {
                     itemBuilder: (context, index) {
                       final pack = packs[index];
                       final score = scores[pack.id];
+                      final lang = ref.watch(
+                        packLanguageForIdProvider(pack.id),
+                      );
                       return CartoonCard(
                         borderColor: pack.safetyTheme.color,
                         rotate: true,
@@ -159,7 +163,7 @@ class StoryBrowserPage extends ConsumerWidget {
                             ),
                             const SizedBox(height: Dimensions.sm),
                             Text(
-                              pack.title,
+                              pack.titleIn(lang),
                               style: Theme.of(context).textTheme.labelLarge
                                   ?.copyWith(fontWeight: FontWeight.w700),
                               maxLines: 2,

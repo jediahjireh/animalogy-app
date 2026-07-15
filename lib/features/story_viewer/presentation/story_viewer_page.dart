@@ -9,7 +9,6 @@ import '../../../core/theme/app_dimensions.dart';
 import '../../../data/mascots/mascot_registry.dart';
 import '../../../data/story_packs/story_pack_registry.dart';
 import '../../../domain/models/app_mode.dart';
-import '../../../domain/models/comprehension_question.dart';
 import '../../../domain/models/story_pack.dart';
 import '../../../domain/models/story_page.dart';
 import '../../../domain/models/story_score.dart';
@@ -18,6 +17,7 @@ import '../../../shared/painters/outback_painter.dart';
 import '../../../shared/painters/rainforest_painter.dart';
 import '../../../shared/painters/savanna_painter.dart';
 import '../../../shared/painters/woodland_painter.dart';
+import '../../../shared/painters/carpathian_painter.dart';
 import '../../../shared/widgets/cartoon_button.dart';
 import '../../my_library/providers/library_providers.dart';
 import 'question_page_view.dart';
@@ -139,7 +139,10 @@ class _StoryViewerPageState extends ConsumerState<StoryViewerPage> {
   void _finishStory() {
     ref.read(readingProgressProvider.notifier).markCompleted(widget.packId);
 
-    final total = _pack.questions.length;
+    final selectedLanguage =
+        ref.read(packLanguageForIdProvider(widget.packId)) ??
+        _pack.defaultLanguage;
+    final total = _pack.questionsIn(selectedLanguage).length;
     final stars = StoryScore.calculateStars(_correctAnswers, total);
     if (total > 0) {
       final score = StoryScore(
@@ -158,8 +161,11 @@ class _StoryViewerPageState extends ConsumerState<StoryViewerPage> {
   @override
   Widget build(BuildContext context) {
     final appMode = ref.watch(appModeProvider);
-    final selectedLanguage = ref.watch(packLanguageForIdProvider(widget.packId)) ?? _pack.defaultLanguage;
-    final content = _pack.getContent(selectedLanguage);
+    final selectedLanguage =
+        ref.watch(packLanguageForIdProvider(widget.packId)) ??
+        _pack.defaultLanguage;
+    final storyPages = _pack.pagesIn(selectedLanguage);
+    final storyQuestions = _pack.questionsIn(selectedLanguage);
 
     if (_showCompletion) {
       return Scaffold(
@@ -168,10 +174,10 @@ class _StoryViewerPageState extends ConsumerState<StoryViewerPage> {
           mascotImageUrl: _mascotImageUrl,
           stars: StoryScore.calculateStars(
             _correctAnswers,
-            content.questions.length,
+            storyQuestions.length,
           ),
           correctAnswers: _correctAnswers,
-          totalQuestions: content.questions.length,
+          totalQuestions: storyQuestions.length,
           onReadAgain: () {
             _pageController.dispose();
             _pageController = PageController(initialPage: 0);
@@ -194,7 +200,7 @@ class _StoryViewerPageState extends ConsumerState<StoryViewerPage> {
     return Scaffold(
       backgroundColor: isQuestionPage
           ? AnimalColors.background
-          : content.pages[currentInterleavedPage.index].sceneColor,
+          : storyPages[currentInterleavedPage.index].sceneColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         leading: IconButton(
@@ -202,7 +208,7 @@ class _StoryViewerPageState extends ConsumerState<StoryViewerPage> {
           onPressed: () => context.pop(),
         ),
         title: Text(
-          content.title,
+          _pack.titleIn(selectedLanguage),
           style: Theme.of(
             context,
           ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
@@ -226,7 +232,7 @@ class _StoryViewerPageState extends ConsumerState<StoryViewerPage> {
                 child: Text(
                   isQuestionPage
                       ? 'Quiz'
-                      : '${currentInterleavedPage.index + 1} / ${content.pages.length}',
+                      : '${currentInterleavedPage.index + 1} / ${storyPages.length}',
                   style: Theme.of(context).textTheme.labelLarge?.copyWith(
                     color: AnimalColors.primary,
                     fontWeight: FontWeight.w700,
@@ -258,17 +264,9 @@ class _StoryViewerPageState extends ConsumerState<StoryViewerPage> {
               itemBuilder: (context, index) {
                 final page = _pages[index];
                 if (page.type == _PageType.question) {
-                  final question = content.questions[page.index];
                   return QuestionPageView(
                     key: ValueKey('q_${page.index}_$_resetCount'),
-                    question: ComprehensionQuestion(
-                      id: question.id,
-                      questionText: question.questionText,
-                      options: question.options,
-                      correctIndex: question.correctIndex,
-                      explanation: question.explanation,
-                      mascotEncouragement: question.mascotEncouragement,
-                    ),
+                    question: storyQuestions[page.index],
                     mascotName: _mascotName,
                     mascotImageUrl: _mascotImageUrl,
                     onAnswered: _goNext,
@@ -278,16 +276,8 @@ class _StoryViewerPageState extends ConsumerState<StoryViewerPage> {
                     },
                   );
                 }
-                final storyPage = content.pages[page.index];
                 return _StoryPageView(
-                  page: StoryPage(
-                    pageNumber: storyPage.pageNumber,
-                    narration: storyPage.narration,
-                    visualDescription: storyPage.visualDescription,
-                    learningCue: storyPage.learningCue,
-                    sceneColor: storyPage.sceneColor,
-                    imageUrl: storyPage.imageUrl,
-                  ),
+                  page: storyPages[page.index],
                   regionId: _pack.regionId,
                   isChildMode: appMode == AppMode.child,
                 );
@@ -366,11 +356,12 @@ class _StoryPageView extends StatelessWidget {
 
   static CustomPainter _painterForRegion(String regionId) {
     return switch (regionId) {
-      'southern_africa' => SavannaPainter(),
+      'south_africa' => SavannaPainter(),
       'australia' => OutbackPainter(),
       'india' => IndiaPainter(),
       'brazil' => RainforestPainter(),
-      'north_america' => WoodlandPainter(),
+      'usa' => WoodlandPainter(),
+      'romania' => CarpathianPainter(),
       _ => SavannaPainter(),
     };
   }
@@ -417,7 +408,7 @@ class _StoryPageView extends StatelessWidget {
                             child: CircularProgressIndicator(
                               value: loadingProgress.expectedTotalBytes != null
                                   ? loadingProgress.cumulativeBytesLoaded /
-                                      loadingProgress.expectedTotalBytes!
+                                        loadingProgress.expectedTotalBytes!
                                   : null,
                               color: Colors.white.withValues(alpha: 0.7),
                               strokeWidth: 2,
@@ -478,4 +469,3 @@ class _StoryPageView extends StatelessWidget {
     );
   }
 }
-

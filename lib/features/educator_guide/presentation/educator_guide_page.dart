@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../core/providers/language_provider.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_dimensions.dart';
 import '../../../data/story_packs/story_pack_registry.dart';
 import '../../../shared/widgets/cartoon_button.dart';
 import '../../../shared/widgets/print_options_sheet.dart';
 
-class EducatorGuidePage extends StatelessWidget {
+class EducatorGuidePage extends ConsumerWidget {
   final String packId;
 
   const EducatorGuidePage({super.key, required this.packId});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final pack = StoryPackRegistry.getById(packId);
-    final guide = pack.educatorGuide;
+    final lang = ref.watch(packLanguageForIdProvider(packId));
+    final guide = pack.educatorGuideIn(lang);
 
     return Scaffold(
       appBar: AppBar(
@@ -29,7 +32,7 @@ class EducatorGuidePage extends StatelessWidget {
             tooltip: 'Printable Resources',
             onPressed: () {
               final pack = StoryPackRegistry.getById(packId);
-              PrintOptionsSheet.show(context, pack);
+              PrintOptionsSheet.show(context, pack, lang);
             },
           ),
         ],
@@ -50,7 +53,7 @@ class EducatorGuidePage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    pack.title,
+                    pack.titleIn(lang),
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                   const SizedBox(height: 4),
@@ -289,7 +292,7 @@ class EducatorGuidePage extends StatelessWidget {
             CartoonButton(
               label: 'Print Resources',
               icon: Icons.print_rounded,
-              onPressed: () => PrintOptionsSheet.show(context, pack),
+              onPressed: () => PrintOptionsSheet.show(context, pack, lang),
               color: AnimalColors.info,
               expanded: true,
             ),
