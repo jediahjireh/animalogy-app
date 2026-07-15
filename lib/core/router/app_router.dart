@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/region_provider.dart';
 import 'route_names.dart';
 import '../../features/home/presentation/home_page.dart';
 import '../../features/region_selection/presentation/region_selection_page.dart';
@@ -14,18 +13,22 @@ import '../../features/mascot_profiles/presentation/mascot_gallery_page.dart';
 import '../../features/mascot_profiles/presentation/mascot_detail_page.dart';
 import '../../features/skills_registry/presentation/skills_page.dart';
 import '../../features/settings/presentation/settings_page.dart';
+import '../../features/splash/presentation/splash_page.dart';
 import '../../shared/widgets/app_shell.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorKey = GlobalKey<NavigatorState>();
 
 final routerProvider = Provider<GoRouter>((ref) {
-  final hasRegion = ref.watch(hasSelectedRegionProvider);
-
   return GoRouter(
     navigatorKey: _rootNavigatorKey,
-    initialLocation: hasRegion ? '/' : '/region-selection',
+    initialLocation: '/splash',
     routes: [
+      GoRoute(
+        path: '/splash',
+        name: RouteNames.splash,
+        builder: (context, state) => const SplashPage(),
+      ),
       GoRoute(
         path: '/region-selection',
         name: RouteNames.regionSelection,
