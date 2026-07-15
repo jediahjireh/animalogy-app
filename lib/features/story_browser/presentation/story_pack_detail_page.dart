@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/constants/regions.dart';
 import '../../../core/providers/app_mode_provider.dart';
+import '../../../core/providers/language_provider.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_dimensions.dart';
 import '../../../data/mascots/mascot_registry.dart';
@@ -19,6 +20,18 @@ class StoryPackDetailPage extends ConsumerWidget {
 
   const StoryPackDetailPage({super.key, required this.packId});
 
+  static const Map<String, String> _languageNames = {
+    'en': 'English',
+    'af': 'Afrikaans',
+    'ro': 'Română',
+  };
+
+  static const Map<String, String> _languageFlags = {
+    'en': '🇬🇧',
+    'af': '🇿🇦',
+    'ro': '🇷🇴',
+  };
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final pack = StoryPackRegistry.getById(packId);
@@ -31,6 +44,7 @@ class StoryPackDetailPage extends ConsumerWidget {
     final packProgress = progress[packId];
     final scores = ref.watch(storyScoresProvider);
     final score = scores[packId];
+    final selectedLanguage = ref.watch(packLanguageForIdProvider(packId)) ?? pack.defaultLanguage;
 
     final regionColor = region?.color ?? AnimalColors.primary;
 
@@ -175,6 +189,68 @@ class StoryPackDetailPage extends ConsumerWidget {
                 ),
               ],
             ),
+            if (pack.availableLanguages.length > 1) ...[
+              const SizedBox(height: Dimensions.md),
+              Row(
+                children: [
+                  Icon(
+                    Icons.language_rounded,
+                    size: 18,
+                    color: AnimalColors.textSecondary,
+                  ),
+                  const SizedBox(width: Dimensions.xs),
+                  Text(
+                    'Language:',
+                    style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                      color: AnimalColors.textSecondary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(width: Dimensions.sm),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: pack.availableLanguages.map((langCode) {
+                          final isSelected = langCode == selectedLanguage;
+                          return Padding(
+                            padding: const EdgeInsets.only(right: 6),
+                            child: ChoiceChip(
+                              label: Text(
+                                '${_languageFlags[langCode] ?? ''} ${_languageNames[langCode] ?? langCode}'.trim(),
+                              ),
+                              selected: isSelected,
+                              onSelected: (_) {
+                                ref.read(packLanguageProvider.notifier).setLanguage(packId, langCode);
+                              },
+                              selectedColor: regionColor.withValues(alpha: 0.2),
+                              backgroundColor: AnimalColors.surface,
+                              side: BorderSide(
+                                color: isSelected
+                                    ? regionColor
+                                    : AnimalColors.border,
+                                width: isSelected ? 1.5 : 1,
+                              ),
+                              labelStyle: TextStyle(
+                                fontSize: 13,
+                                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                                color: isSelected
+                                    ? regionColor
+                                    : AnimalColors.textSecondary,
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 4,
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
             if (score != null) ...[
               const SizedBox(height: Dimensions.md),
               Row(

@@ -15,6 +15,7 @@ class PreferencesService {
   static const _keyBookmarks = 'bookmarks';
   static const _keyProgress = 'reading_progress';
   static const _keyScores = 'story_scores';
+  static const _keyLanguages = 'pack_languages';
 
   Region? getSelectedRegion() {
     final id = _prefs.getString(_keyRegion);
@@ -73,5 +74,31 @@ class PreferencesService {
   Future<void> setStoryScores(Map<String, StoryScore> scores) async {
     final map = scores.map((key, value) => MapEntry(key, value.toJson()));
     await _prefs.setString(_keyScores, jsonEncode(map));
+  }
+
+  /// Get language selections per story pack (packId -> languageCode)
+  Map<String, String> getPackLanguages() {
+    final raw = _prefs.getString(_keyLanguages);
+    if (raw == null) return {};
+    final map = jsonDecode(raw) as Map<String, dynamic>;
+    return map.cast<String, String>();
+  }
+
+  /// Get language for a specific pack, returns null if not set
+  String? getPackLanguage(String packId) {
+    final languages = getPackLanguages();
+    return languages[packId];
+  }
+
+  /// Set language for a specific pack
+  Future<void> setPackLanguage(String packId, String languageCode) async {
+    final languages = getPackLanguages();
+    languages[packId] = languageCode;
+    await _prefs.setString(_keyLanguages, jsonEncode(languages));
+  }
+
+  /// Set all pack languages at once
+  Future<void> setPackLanguages(Map<String, String> languages) async {
+    await _prefs.setString(_keyLanguages, jsonEncode(languages));
   }
 }

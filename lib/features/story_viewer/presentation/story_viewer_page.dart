@@ -3,11 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../../../core/providers/app_mode_provider.dart';
+import '../../../core/providers/language_provider.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_dimensions.dart';
 import '../../../data/mascots/mascot_registry.dart';
 import '../../../data/story_packs/story_pack_registry.dart';
 import '../../../domain/models/app_mode.dart';
+import '../../../domain/models/comprehension_question.dart';
 import '../../../domain/models/story_pack.dart';
 import '../../../domain/models/story_page.dart';
 import '../../../domain/models/story_score.dart';
@@ -156,6 +158,8 @@ class _StoryViewerPageState extends ConsumerState<StoryViewerPage> {
   @override
   Widget build(BuildContext context) {
     final appMode = ref.watch(appModeProvider);
+    final selectedLanguage = ref.watch(packLanguageForIdProvider(widget.packId)) ?? _pack.defaultLanguage;
+    final content = _pack.getContent(selectedLanguage);
 
     if (_showCompletion) {
       return Scaffold(
@@ -164,10 +168,10 @@ class _StoryViewerPageState extends ConsumerState<StoryViewerPage> {
           mascotImageUrl: _mascotImageUrl,
           stars: StoryScore.calculateStars(
             _correctAnswers,
-            _pack.questions.length,
+            content.questions.length,
           ),
           correctAnswers: _correctAnswers,
-          totalQuestions: _pack.questions.length,
+          totalQuestions: content.questions.length,
           onReadAgain: () {
             _pageController.dispose();
             _pageController = PageController(initialPage: 0);
@@ -190,7 +194,7 @@ class _StoryViewerPageState extends ConsumerState<StoryViewerPage> {
     return Scaffold(
       backgroundColor: isQuestionPage
           ? AnimalColors.background
-          : _pack.pages[currentInterleavedPage.index].sceneColor,
+          : content.pages[currentInterleavedPage.index].sceneColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         leading: IconButton(
@@ -198,7 +202,7 @@ class _StoryViewerPageState extends ConsumerState<StoryViewerPage> {
           onPressed: () => context.pop(),
         ),
         title: Text(
-          _pack.title,
+          content.title,
           style: Theme.of(
             context,
           ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
@@ -222,7 +226,7 @@ class _StoryViewerPageState extends ConsumerState<StoryViewerPage> {
                 child: Text(
                   isQuestionPage
                       ? 'Quiz'
-                      : '${currentInterleavedPage.index + 1} / ${_pack.pages.length}',
+                      : '${currentInterleavedPage.index + 1} / ${content.pages.length}',
                   style: Theme.of(context).textTheme.labelLarge?.copyWith(
                     color: AnimalColors.primary,
                     fontWeight: FontWeight.w700,
@@ -254,9 +258,17 @@ class _StoryViewerPageState extends ConsumerState<StoryViewerPage> {
               itemBuilder: (context, index) {
                 final page = _pages[index];
                 if (page.type == _PageType.question) {
+                  final question = content.questions[page.index];
                   return QuestionPageView(
                     key: ValueKey('q_${page.index}_$_resetCount'),
-                    question: _pack.questions[page.index],
+                    question: ComprehensionQuestion(
+                      id: question.id,
+                      questionText: question.questionText,
+                      options: question.options,
+                      correctIndex: question.correctIndex,
+                      explanation: question.explanation,
+                      mascotEncouragement: question.mascotEncouragement,
+                    ),
                     mascotName: _mascotName,
                     mascotImageUrl: _mascotImageUrl,
                     onAnswered: _goNext,
@@ -266,8 +278,16 @@ class _StoryViewerPageState extends ConsumerState<StoryViewerPage> {
                     },
                   );
                 }
+                final storyPage = content.pages[page.index];
                 return _StoryPageView(
-                  page: _pack.pages[page.index],
+                  page: StoryPage(
+                    pageNumber: storyPage.pageNumber,
+                    narration: storyPage.narration,
+                    visualDescription: storyPage.visualDescription,
+                    learningCue: storyPage.learningCue,
+                    sceneColor: storyPage.sceneColor,
+                    imageUrl: storyPage.imageUrl,
+                  ),
                   regionId: _pack.regionId,
                   isChildMode: appMode == AppMode.child,
                 );

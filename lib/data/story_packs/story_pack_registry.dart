@@ -1,5 +1,5 @@
 import '../../domain/models/story_pack.dart';
-import 'kaia_meerkat_pack.dart';
+import 'kaia_meerkat_pack_multilang.dart';
 import 'daisy_dingo_pack.dart';
 import 'tara_turtle_pack.dart';
 import 'luma_capybara_pack.dart';
@@ -9,7 +9,7 @@ class StoryPackRegistry {
   StoryPackRegistry._();
 
   static final List<StoryPack> allPacks = [
-    ...kaiaMeerkatPacks,
+    kaiaMeerkatPackMultilang,
     ...daisyDingoPacks,
     ...taraTurtlePacks,
     ...lumaCapybaraPacks,
