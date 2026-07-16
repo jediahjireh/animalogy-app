@@ -3,10 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '../../../core/constants/regions.dart';
+import '../../../core/l10n/ui_strings.dart';
+import '../../../core/providers/language_provider.dart';
 import '../../../core/providers/region_provider.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_dimensions.dart';
 import '../../../data/mascots/mascot_registry.dart';
+import '../../../data/story_packs/story_pack_registry.dart';
+import '../../../shared/widgets/cartoon_button.dart';
 import '../../../shared/widgets/cartoon_card.dart';
 import '../../../shared/widgets/region_icon.dart';
 
@@ -76,12 +80,7 @@ class RegionSelectionPage extends ConsumerWidget {
                           mascotName: mascot.name,
                           mascotIcon: mascot.icon,
                           mascotImageUrl: mascot.imageUrl,
-                          onTap: () async {
-                            await ref
-                                .read(selectedRegionProvider.notifier)
-                                .select(region);
-                            if (context.mounted) context.go('/');
-                          },
+                          onTap: () => _selectRegion(context, ref, region),
                         )
                         .animate()
                         .fadeIn(
@@ -102,6 +101,114 @@ class RegionSelectionPage extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _selectRegion(
+    BuildContext context,
+    WidgetRef ref,
+    Region region,
+  ) async {
+    await ref.read(selectedRegionProvider.notifier).select(region);
+    if (!context.mounted) return;
+
+    final packs = StoryPackRegistry.getByRegion(region.id);
+    final languages = <String>{};
+    for (final pack in packs) {
+      languages.addAll(pack.availableLanguages);
+    }
+
+    if (languages.length > 1) {
+      await _showLanguagePicker(context, ref, region, languages.toList());
+    } else {
+      context.go('/');
+    }
+  }
+
+  Future<void> _showLanguagePicker(
+    BuildContext context,
+    WidgetRef ref,
+    Region region,
+    List<String> languages,
+  ) async {
+    await showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(Dimensions.radiusXl),
+        ),
+      ),
+      builder: (_) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(Dimensions.lg),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: AnimalColors.border,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+              const SizedBox(height: Dimensions.md),
+              Icon(
+                Icons.translate_rounded,
+                size: Dimensions.iconLg,
+                color: region.color,
+              ),
+              const SizedBox(height: Dimensions.sm),
+              Text(
+                'Choose your language',
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: Dimensions.xs),
+              Text(
+                'Stories in ${region.name} are available in multiple languages',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: AnimalColors.textTertiary,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: Dimensions.lg),
+              ...languages.map(
+                (langCode) => Padding(
+                  padding: const EdgeInsets.only(bottom: Dimensions.sm),
+                  child: CartoonButton(
+                    label: UIStrings.languageName(langCode),
+                    icon: Icons.language_rounded,
+                    color: region.color,
+                    expanded: true,
+                    onPressed: () {
+                      final packs = StoryPackRegistry.getByRegion(region.id);
+                      for (final pack in packs) {
+                        if (pack.hasLanguage(langCode)) {
+                          ref
+                              .read(packLanguageProvider.notifier)
+                              .setLanguage(pack.id, langCode);
+                        }
+                      }
+                      Navigator.pop(context);
+                      context.go('/');
+                    },
+                  ),
+                ),
+              ),
+              const SizedBox(height: Dimensions.md),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    // If user dismissed without picking, navigate to home with defaults
+    if (context.mounted) context.go('/');
   }
 }
 
