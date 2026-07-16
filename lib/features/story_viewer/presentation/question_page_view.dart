@@ -3,11 +3,13 @@ import 'package:flutter_animate/flutter_animate.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_dimensions.dart';
 import '../../../core/utils/haptic_utils.dart';
+import '../../../core/l10n/ui_strings.dart';
 import '../../../domain/models/comprehension_question.dart';
 import '../../../shared/widgets/cartoon_button.dart';
 import '../../../shared/widgets/speech_bubble.dart';
 
 class QuestionPageView extends StatefulWidget {
+  final String? languageCode;
   final ComprehensionQuestion question;
   final String mascotName;
   final String mascotImageUrl;
@@ -16,6 +18,7 @@ class QuestionPageView extends StatefulWidget {
 
   const QuestionPageView({
     super.key,
+    this.languageCode,
     required this.question,
     required this.mascotName,
     this.mascotImageUrl = '',
@@ -33,6 +36,8 @@ class _QuestionPageViewState extends State<QuestionPageView> {
 
   @override
   Widget build(BuildContext context) {
+    final strings = UIStrings.of(widget.languageCode);
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(Dimensions.lg),
       child: Column(
@@ -116,10 +121,11 @@ class _QuestionPageViewState extends State<QuestionPageView> {
               explanation: widget.question.explanation,
               encouragement: widget.question.mascotEncouragement,
               mascotName: widget.mascotName,
+              languageCode: widget.languageCode,
             ).animate().fadeIn(duration: 300.ms).slideY(begin: 0.1, end: 0),
             const SizedBox(height: Dimensions.lg),
             CartoonButton(
-              label: 'Continue',
+              label: strings.continueButton,
               icon: Icons.arrow_forward_rounded,
               onPressed: widget.onAnswered,
               expanded: true,
@@ -243,16 +249,19 @@ class _FeedbackCard extends StatelessWidget {
   final String explanation;
   final String encouragement;
   final String mascotName;
+  final String? languageCode;
 
   const _FeedbackCard({
     required this.correct,
     required this.explanation,
     required this.encouragement,
     required this.mascotName,
+    this.languageCode,
   });
 
   @override
   Widget build(BuildContext context) {
+    final strings = UIStrings.of(languageCode);
     final color = correct ? AnimalColors.success : AnimalColors.warning;
 
     return Container(
@@ -275,7 +284,7 @@ class _FeedbackCard extends StatelessWidget {
               ),
               const SizedBox(width: Dimensions.sm),
               Text(
-                correct ? 'Correct!' : 'Not quite!',
+                correct ? strings.correct : strings.notQuite,
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   color: color,
                   fontWeight: FontWeight.w800,
@@ -293,7 +302,7 @@ class _FeedbackCard extends StatelessWidget {
           if (correct) ...[
             const SizedBox(height: Dimensions.sm),
             Text(
-              '$mascotName says: "$encouragement"',
+              strings.saysQuote(mascotName, encouragement),
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 fontStyle: FontStyle.italic,
                 color: AnimalColors.secondary,

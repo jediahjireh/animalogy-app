@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import '../../../core/l10n/ui_strings.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_dimensions.dart';
 import '../../../core/utils/haptic_utils.dart';
@@ -8,6 +9,7 @@ import '../../../shared/widgets/speech_bubble.dart';
 import '../../../shared/widgets/star_display.dart';
 
 class StoryCompleteOverlay extends StatefulWidget {
+  final String? languageCode;
   final String mascotName;
   final String mascotImageUrl;
   final int stars;
@@ -18,6 +20,7 @@ class StoryCompleteOverlay extends StatefulWidget {
 
   const StoryCompleteOverlay({
     super.key,
+    this.languageCode,
     required this.mascotName,
     this.mascotImageUrl = '',
     required this.stars,
@@ -40,12 +43,8 @@ class _StoryCompleteOverlayState extends State<StoryCompleteOverlay> {
 
   @override
   Widget build(BuildContext context) {
-    final message = switch (widget.stars) {
-      3 => 'Amazing work! You got every question right!',
-      2 => 'Great job! You understood the story well!',
-      1 => 'Good effort! Try reading again to learn even more!',
-      _ => 'Keep practising! Every story teaches something new!',
-    };
+    final strings = UIStrings.of(widget.languageCode);
+    final message = strings.starMessage(widget.stars);
 
     return Container(
       color: AnimalColors.background.withValues(alpha: 0.95),
@@ -102,7 +101,7 @@ class _StoryCompleteOverlayState extends State<StoryCompleteOverlay> {
                     ),
                 const SizedBox(height: Dimensions.lg),
                 Text(
-                  'Story Complete!',
+                  strings.storyComplete,
                   style: Theme.of(context).textTheme.displayMedium?.copyWith(
                     fontWeight: FontWeight.w800,
                     color: AnimalColors.primary,
@@ -118,7 +117,7 @@ class _StoryCompleteOverlayState extends State<StoryCompleteOverlay> {
                     ),
                 const SizedBox(height: Dimensions.md),
                 Text(
-                  '${widget.correctAnswers} / ${widget.totalQuestions} correct',
+                  '${widget.correctAnswers} / ${widget.totalQuestions} ${strings.correctLabel}',
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     color: AnimalColors.textSecondary,
                   ),
@@ -129,7 +128,7 @@ class _StoryCompleteOverlayState extends State<StoryCompleteOverlay> {
                   child: Column(
                     children: [
                       Text(
-                        '${widget.mascotName} says:',
+                        '${widget.mascotName} ${strings.says}',
                         style: Theme.of(context).textTheme.labelMedium
                             ?.copyWith(color: AnimalColors.textTertiary),
                       ),
@@ -146,14 +145,14 @@ class _StoryCompleteOverlayState extends State<StoryCompleteOverlay> {
                 ).animate().fadeIn(delay: 600.ms, duration: 400.ms),
                 const SizedBox(height: Dimensions.xl),
                 CartoonButton(
-                  label: 'Back to Stories',
+                  label: strings.backToStories,
                   icon: Icons.menu_book_rounded,
                   onPressed: widget.onDone,
                   expanded: true,
                 ).animate().fadeIn(delay: 800.ms, duration: 300.ms),
                 const SizedBox(height: Dimensions.md),
                 CartoonButton(
-                  label: 'Read Again',
+                  label: strings.readAgain,
                   icon: Icons.replay_rounded,
                   onPressed: widget.onReadAgain,
                   color: AnimalColors.secondary,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/constants/regions.dart';
+import '../../../core/l10n/ui_strings.dart';
 import '../../../core/providers/app_mode_provider.dart';
 import '../../../core/providers/language_provider.dart';
 import '../../../core/theme/app_colors.dart';
@@ -19,12 +20,6 @@ class StoryPackDetailPage extends ConsumerWidget {
   final String packId;
 
   const StoryPackDetailPage({super.key, required this.packId});
-
-  static const Map<String, String> _languageNames = {
-    'en': 'English',
-    'af': 'Afrikaans',
-    'ro': 'Română',
-  };
 
   static const Map<String, String> _languageFlags = {
     'en': '🇬🇧',
@@ -223,7 +218,7 @@ class StoryPackDetailPage extends ConsumerWidget {
                             padding: const EdgeInsets.only(right: 6),
                             child: ChoiceChip(
                               label: Text(
-                                '${_languageFlags[langCode] ?? ''} ${_languageNames[langCode] ?? langCode}'
+                                '${_languageFlags[langCode] ?? ''} ${UIStrings.languageNames[langCode] ?? langCode}'
                                     .trim(),
                               ),
                               selected: isSelected,

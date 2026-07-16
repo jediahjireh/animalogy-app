@@ -170,6 +170,7 @@ class _StoryViewerPageState extends ConsumerState<StoryViewerPage> {
     if (_showCompletion) {
       return Scaffold(
         body: StoryCompleteOverlay(
+          languageCode: selectedLanguage,
           mascotName: _mascotName,
           mascotImageUrl: _mascotImageUrl,
           stars: StoryScore.calculateStars(
@@ -266,6 +267,7 @@ class _StoryViewerPageState extends ConsumerState<StoryViewerPage> {
                 if (page.type == _PageType.question) {
                   return QuestionPageView(
                     key: ValueKey('q_${page.index}_$_resetCount'),
+                    languageCode: selectedLanguage,
                     question: storyQuestions[page.index],
                     mascotName: _mascotName,
                     mascotImageUrl: _mascotImageUrl,
